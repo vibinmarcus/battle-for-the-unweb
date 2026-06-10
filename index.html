@@ -274,6 +274,7 @@
 
       <!-- Monster panel -->
       <div id="monsterPanel" style="display:none">
+        <div class="mob-fight-handle"></div>
         <div class="monster-card">
           <div class="monster-top">
             <div id="monsterIllustration" style="flex-shrink:0"></div>
@@ -323,6 +324,9 @@
           <button class="fight-btn primary" id="fightBtn" onclick="doFightRound()"><i class="ti ti-sword"></i> Fight!</button>
         </div>
 
+        <div id="mobFightDismiss" style="display:none;justify-content:center;margin-top:10px">
+          <button onclick="closeMobFight()" style="font-size:12px;padding:6px 24px"><i class="ti ti-chevron-down"></i> Continue</button>
+        </div>
       </div>
 
       <!-- Post-fight -->
@@ -411,6 +415,7 @@
 <script src="src/pentagram.js"></script>
 
 <div id="mobPanelBackdrop" class="mob-panel-backdrop" onclick="closeMobPanels()"></div>
+<div id="mobFightBackdrop" onclick="return false"></div>
 
 <script>
 function toggleMobPanel(which) {

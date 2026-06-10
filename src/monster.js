@@ -338,6 +338,10 @@ async function summonMonster() {
     hide('postFight');
     document.getElementById('combatLog').innerHTML = '';
     show('monsterPanel');
+    if (window.innerWidth <= 640) {
+      document.getElementById('monsterPanel').classList.add('mob-modal');
+      document.getElementById('mobFightBackdrop').classList.add('active');
+    }
     initFight(entry);
     renderBestiary();
 

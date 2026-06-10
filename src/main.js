@@ -455,6 +455,13 @@ function resetForm() {
   document.getElementById('urlInput').focus();
   resetLootPanel();
   fightState = null;
+  // Clean up mobile fight modal state
+  var mp = document.getElementById('monsterPanel');
+  if (mp) mp.classList.remove('mob-modal');
+  var fbd = document.getElementById('mobFightBackdrop');
+  if (fbd) fbd.classList.remove('active');
+  var fd = document.getElementById('mobFightDismiss');
+  if (fd) fd.style.display = 'none';
 }
 
 function renderStarterSuggestions() {

@@ -216,10 +216,7 @@ function endFight(won) {
     writeSave();
     renderGold();
     if (window.innerWidth <= 640) {
-      var lootCol = document.querySelector('.loot-col');
-      var bd = document.getElementById('mobPanelBackdrop');
-      if (lootCol) { lootCol.classList.add('mob-open'); document.querySelector('.inv-col').classList.remove('mob-open'); }
-      if (bd) bd.classList.add('active');
+      document.getElementById('mobFightDismiss').style.display = 'flex';
     }
     sbWriteLeaderboard(save);
     updateXpBar();
@@ -256,5 +253,25 @@ function endFight(won) {
     resetLootPanel();
     const bEntryD = save.bestiary.find(e => e.url === f.entry.url); if (bEntryD) bEntryD.outcome = 'defeat';
     writeSave();
+    if (window.innerWidth <= 640) {
+      document.getElementById('mobFightDismiss').style.display = 'flex';
+    }
   }
+}
+
+function closeMobFight() {
+  document.getElementById('monsterPanel').classList.remove('mob-modal');
+  document.getElementById('mobFightBackdrop').classList.remove('active');
+  document.getElementById('mobFightDismiss').style.display = 'none';
+  // Open loot drawer on victory
+  if (fightState && fightState.won) {
+    var lootCol = document.querySelector('.loot-col');
+    var bd = document.getElementById('mobPanelBackdrop');
+    if (lootCol) { lootCol.classList.add('mob-open'); var inv = document.querySelector('.inv-col'); if (inv) inv.classList.remove('mob-open'); }
+    if (bd) bd.classList.add('active');
+  }
+  setTimeout(function() {
+    var pf = document.getElementById('postFight');
+    if (pf) pf.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
