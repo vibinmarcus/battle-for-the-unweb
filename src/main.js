@@ -9,20 +9,35 @@ let save = {
   equipped: { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] }
 };
 
-function loadSave() {
+async function loadSave() {
+  // Try cloud first
+  const cloud = await sbLoadSave();
+  if (cloud && cloud.created) {
+    save = cloud;
+    _patchSave();
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(_) {}
+    return;
+  }
+  // Fall back to localStorage — migrate to cloud if found
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (s && s.created) {
       save = s;
-      if (!save.equipped) save.equipped = { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] };
-      if (!save.equipped.charms) save.equipped.charms = [null, null];
-      if (!save.domainLinks) save.domainLinks = {};
+      _patchSave();
+      sbWriteSave(save); // migrate
     }
   } catch(_) {}
 }
 
+function _patchSave() {
+  if (!save.equipped) save.equipped = { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] };
+  if (!save.equipped.charms) save.equipped.charms = [null, null];
+  if (!save.domainLinks) save.domainLinks = {};
+}
+
 function writeSave() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(_) {}
+  sbWriteSave(save); // fire-and-forget
 }
 
 function hasSave() { return save.created; }
@@ -53,6 +68,9 @@ function goLoadAdventure() {
 }
 
 function renderHome() {
+  const u = sbUser();
+  const lbl = document.getElementById('authUserLabel');
+  if (lbl && u) lbl.textContent = u.email;
   const lb = document.getElementById('loadBtn');
   const sp = document.getElementById('savePreview');
   if (hasSave()) {
@@ -344,6 +362,7 @@ function confirmDialogClose(confirmed) {
   document.getElementById('confirmDialog').style.display = 'none';
   if (!confirmed) return;
   localStorage.removeItem(SAVE_KEY);
+  sbDeleteSave();
   save = { created:false, charName:'', classId:'', playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
   renderHome();
 }
@@ -371,7 +390,53 @@ function showSlotTip(anchorEl, html, alignLeft) {
 }
 function hideSlotTip() { _slotTip.style.display = 'none'; }
 
-loadSave();
-renderHome();
+/* ── Auth UI ──────────────────────────────────────────────── */
+
+async function authSendLink() {
+  const email  = document.getElementById('authEmail').value.trim();
+  const errEl  = document.getElementById('authErr');
+  const btnEl  = document.getElementById('authSendBtn');
+  if (!email) { errEl.textContent = 'Please enter your email.'; errEl.style.display = ''; return; }
+  errEl.style.display = 'none';
+  btnEl.disabled = true;
+  btnEl.textContent = 'Sending…';
+  const error = await sbSendMagicLink(email);
+  if (error) {
+    errEl.textContent = error.message || 'Failed to send link. Try again.';
+    errEl.style.display = '';
+    btnEl.disabled = false;
+    btnEl.innerHTML = '<i class="ti ti-mail"></i> Send magic link';
+  } else {
+    document.getElementById('authForm').style.display = 'none';
+    document.getElementById('authSent').style.display = '';
+  }
+}
+
+async function signOut() {
+  await sbSignOut();
+  save = { created:false, charName:'', classId:'', playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
+  document.getElementById('invPanel').style.display  = 'none';
+  document.getElementById('lootPanel').style.display = 'none';
+  document.getElementById('authForm').style.display  = '';
+  document.getElementById('authSent').style.display  = 'none';
+  document.getElementById('authEmail').value         = '';
+  document.getElementById('authSendBtn').disabled    = false;
+  document.getElementById('authSendBtn').innerHTML   = '<i class="ti ti-mail"></i> Send magic link';
+  showScreen('screen-auth');
+}
+
+/* ── Boot ─────────────────────────────────────────────────── */
+
+(async () => {
+  const user = await sbInit();
+  if (!user) {
+    showScreen('screen-auth');
+    return;
+  }
+  await loadSave();
+  showScreen('screen-home');
+  renderHome();
+})();
 
 document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') summonMonster(); });
+document.getElementById('authEmail').addEventListener('keydown', e => { if (e.key === 'Enter') authSendLink(); });
