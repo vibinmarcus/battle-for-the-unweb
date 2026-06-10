@@ -760,27 +760,14 @@ button.primary:hover { background: var(--gold-lt); }
     overflow: visible;
   }
 
-  /* Home screen: switch away from absolute positioning */
-  #screen-home { overflow: visible; }
-  .screen.active { height: auto; overflow: visible; }
-  .home-title {
-    position: static;
-    font-size: 20px;
-    text-align: center;
-    padding-top: 0.75rem;
-    margin-bottom: 0.5rem;
-  }
-  .home-hero {
-    position: static;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.5rem 1rem 2rem;
-    justify-content: flex-start;
-  }
-  .home-actions { width: 100%; max-width: 340px; margin: 0 auto; }
-  .save-preview { width: 100%; max-width: 340px; margin: 1.25rem auto 0; }
+  /* Home screen: keep absolute centering, just fill the viewport */
+  #screen-home { height: 100svh; overflow: hidden; }
+  .home-title { font-size: 20px; }
+  .home-actions { max-width: calc(100vw - 2rem); }
+  .save-preview { max-width: calc(100vw - 2rem); }
+
+  /* Other screens: allow natural auto height */
+  #screen-auth, #screen-create, #screen-game { height: auto; overflow: visible; }
 
   /* Create screen */
   .creation-wrap { padding: 1rem 0 2rem; }
