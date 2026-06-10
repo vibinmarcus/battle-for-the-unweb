@@ -339,7 +339,9 @@ async function summonMonster() {
     document.getElementById('combatLog').innerHTML = '';
     show('monsterPanel');
     if (window.innerWidth <= 640) {
-      document.getElementById('monsterPanel').classList.add('mob-modal');
+      var _mp = document.getElementById('monsterPanel');
+      _mp.classList.add('mob-modal');
+      document.body.appendChild(_mp); // escape .center-col stacking context
       document.getElementById('mobFightBackdrop').classList.add('active');
     }
     initFight(entry);

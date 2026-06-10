@@ -260,7 +260,12 @@ function endFight(won) {
 }
 
 function closeMobFight() {
-  document.getElementById('monsterPanel').classList.remove('mob-modal');
+  var panel = document.getElementById('monsterPanel');
+  panel.classList.remove('mob-modal');
+  // Return panel to its original position inside #screen-game
+  var sg = document.getElementById('screen-game');
+  var pf = document.getElementById('postFight');
+  sg.insertBefore(panel, pf);
   document.getElementById('mobFightBackdrop').classList.remove('active');
   document.getElementById('mobFightDismiss').style.display = 'none';
   // Open loot drawer on victory

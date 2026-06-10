@@ -457,7 +457,15 @@ function resetForm() {
   fightState = null;
   // Clean up mobile fight modal state
   var mp = document.getElementById('monsterPanel');
-  if (mp) mp.classList.remove('mob-modal');
+  if (mp) {
+    mp.classList.remove('mob-modal');
+    // Return panel to screen-game if it was moved to body
+    var sg = document.getElementById('screen-game');
+    if (mp.parentElement !== sg) {
+      var pf = document.getElementById('postFight');
+      sg.insertBefore(mp, pf);
+    }
+  }
   var fbd = document.getElementById('mobFightBackdrop');
   if (fbd) fbd.classList.remove('active');
   var fd = document.getElementById('mobFightDismiss');
