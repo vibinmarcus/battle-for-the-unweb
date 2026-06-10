@@ -154,10 +154,42 @@ function renderClassGrid() {
 
 let selectedClass = '';
 
+const _nameFragments = {
+  warrior: {
+    pre:  ['Iron','Stone','Blood','Grim','Ash','Scar','Storm','War','Doom','Bone'],
+    suf:  ['fist','vale','born','heart','ward','blade','bane','forge','crest','fall'],
+  },
+  mage: {
+    pre:  ['Aether','Vex','Mira','Syl','Nox','Arc','Zeph','Lyr','Oryn','Cal'],
+    suf:  ['ix','ara','wyn','ion','us','el','is','oth','ael','an'],
+  },
+  rogue: {
+    pre:  ['Shade','Swift','Null','Dusk','Veil','Blade','Ash','Mist','Night','Edge'],
+    suf:  ['runner','step','claw','whisper','dart','vane','slip','tooth','mark','fall'],
+  },
+  ranger: {
+    pre:  ['Hawk','Fern','Crow','Thorn','River','Moss','Cedar','Wolf','Flint','Reed'],
+    suf:  ['eye','song','track','stride','watch','wind','wood','arrow','bow','path'],
+  },
+  paladin: {
+    pre:  ['Holy','Dawn','Sol','Aur','Lux','Sere','Vale','Bless','Grace','True'],
+    suf:  ['fire','born','shield','heart','light','mark','sworn','vale','keep','ward'],
+  },
+};
+
+function _generateName(classId) {
+  const f = _nameFragments[classId] || _nameFragments.warrior;
+  const pre = f.pre[Math.floor(Math.random() * f.pre.length)];
+  const suf = f.suf[Math.floor(Math.random() * f.suf.length)];
+  return pre + suf;
+}
+
 function selectClass(id) {
   selectedClass = id;
   document.querySelectorAll('.class-card').forEach(el => el.classList.remove('selected'));
   document.getElementById('cc-' + id).classList.add('selected');
+  // Fill the name input with a generated name each time a class is clicked
+  document.getElementById('charNameInput').value = _generateName(id);
 }
 
 function startAdventure() {
