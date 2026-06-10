@@ -163,6 +163,12 @@ function endFight(won) {
       });
     }
     writeSave();
+    if (window.innerWidth <= 640) {
+      var lootCol = document.querySelector('.loot-col');
+      var bd = document.getElementById('mobPanelBackdrop');
+      if (lootCol) { lootCol.classList.add('mob-open'); document.querySelector('.inv-col').classList.remove('mob-open'); }
+      if (bd) bd.classList.add('active');
+    }
     sbWriteLeaderboard(save);
     updateXpBar();
     renderBestiary();
