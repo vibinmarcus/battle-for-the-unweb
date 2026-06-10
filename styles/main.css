@@ -857,8 +857,9 @@ button.primary:hover { background: var(--gold-lt); }
     padding: 10px 12px 28px;
     max-height: 88vh;
     overflow-y: auto;
-    animation: mob-fight-up 0.3s ease;
     transform: none !important;
+    transition: none !important;
+    animation: mob-fight-up 0.3s ease;
   }
 
   /* Hide fight button on mobile when fight ends — Continue button takes over */
