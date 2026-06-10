@@ -61,6 +61,38 @@ async function sbWriteSave(saveObj) {
   } catch(_) {}
 }
 
+/* Leaderboard — write own row */
+async function sbWriteLeaderboard(saveObj) {
+  if (!_currentUser) return;
+  const { rank } = typeof getHunterRank === 'function' ? getHunterRank(saveObj.playerXP) : { rank: { lvl: 0 } };
+  try {
+    await _sb.from('leaderboard').upsert({
+      user_id:    _currentUser.id,
+      char_name:  saveObj.charName  || 'Unknown',
+      char_class: saveObj.classId   || '',
+      level:      rank.lvl          || 0,
+      xp:         saveObj.playerXP  || 0,
+      kills:      (saveObj.defeated || []).length,
+      best_score: saveObj.bestScore || 0,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+  } catch(_) {}
+}
+
+/* Leaderboard — fetch top 20 */
+async function sbFetchLeaderboard() {
+  try {
+    const { data, error } = await _sb
+      .from('leaderboard')
+      .select('user_id,char_name,char_class,level,kills,best_score')
+      .order('level', { ascending: false })
+      .order('kills', { ascending: false })
+      .limit(20);
+    if (error || !data) return [];
+    return data;
+  } catch(_) { return []; }
+}
+
 /* Monster score cache — read */
 async function sbGetMonster(domain) {
   try {

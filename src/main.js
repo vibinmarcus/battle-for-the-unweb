@@ -33,6 +33,7 @@ function _patchSave() {
   if (!save.equipped) save.equipped = { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] };
   if (!save.equipped.charms) save.equipped.charms = [null, null];
   if (!save.domainLinks) save.domainLinks = {};
+  if (!save.bestScore)   save.bestScore   = 0;
 }
 
 let _saveTimer = null;
@@ -70,6 +71,35 @@ function goLoadAdventure() {
   renderGame();
 }
 
+async function renderLeaderboard() {
+  const panel = document.getElementById('leaderboardPanel');
+  if (!panel) return;
+  panel.style.display = '';
+  const rows = document.getElementById('lbRows');
+  rows.innerHTML = '<div class="lb-empty">Loading…</div>';
+  const data = await sbFetchLeaderboard();
+  if (!data.length) { rows.innerHTML = '<div class="lb-empty">No hunters ranked yet — be the first!</div>'; return; }
+  const me = sbUser();
+  const CLASSES_MAP = Object.fromEntries((typeof CLASSES !== 'undefined' ? CLASSES : []).map(c => [c.id, c.name]));
+  rows.innerHTML = data.map((row, i) => {
+    const rank    = i + 1;
+    const isMe    = me && row.user_id === me.id;
+    const topRank = rank <= 3;
+    const crown   = rank === 1 ? '👑 ' : '';
+    const cls     = CLASSES_MAP[row.char_class] || row.char_class || '';
+    const hiScore = row.best_score >= 40;
+    return `<div class="lb-row${isMe ? ' lb-me' : ''}">
+      <div class="lb-rank${topRank ? ' lb-top' : ''}">${crown}${rank}</div>
+      <div class="lb-name${isMe ? ' lb-me-name' : ''}">${row.char_name}<span class="lb-class-tag">${cls}</span></div>
+      <div class="lb-val lb-lvl">${row.level}</div>
+      <div class="lb-val">${row.kills}</div>
+      <div class="lb-val${hiScore ? ' lb-best-hi' : ''}">${row.best_score}</div>
+    </div>`;
+  }).join('');
+}
+
+function refreshLeaderboard() { renderLeaderboard(); }
+
 function renderHome() {
   const u = sbUser();
   const lbl = document.getElementById('authUserLabel');
@@ -95,6 +125,7 @@ function renderHome() {
     sp.style.display = 'none';
     document.getElementById('spDelete').style.display = 'none';
   }
+  renderLeaderboard();
 }
 
 function renderClassGrid() {

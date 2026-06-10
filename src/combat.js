@@ -152,7 +152,10 @@ function endFight(won) {
       save.defeated.push(f.entry.url);
       (window._pendingDrops || []).filter(Boolean).forEach(d => save.equipment.push(d));
     }
+    // Track best monster score ever beaten
+    if (!save.bestScore || f.entry.score > save.bestScore) save.bestScore = f.entry.score;
     writeSave();
+    sbWriteLeaderboard(save);
     updateXpBar();
     renderBestiary();
     setTimeout(() => showToast(`+${awarded} XP${already?' (repeat)':''}${linkBonus ? ' +15% linked domain bonus!' : ''}${(window._pendingDrops||[]).some(Boolean)?' · loot dropped!':''}`), 300);
