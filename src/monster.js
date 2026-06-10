@@ -292,7 +292,8 @@ async function summonMonster() {
     window._pendingDrops = already
       ? [null, null]
       : [generateDrop(parsed.score, metaTokens, parsed.siteTitle), generateDrop(parsed.score, metaTokens, parsed.siteTitle)];
-    window._claimedLoot = {};
+    window._claimedLoot  = {};
+    window._fightActive  = !already;  // lock equip until monster is beaten
 
     if (!already) {
       renderLootSlot(document.getElementById('loot-slot-1'), window._pendingDrops[0], 0);

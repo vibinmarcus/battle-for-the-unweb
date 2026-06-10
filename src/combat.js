@@ -154,6 +154,12 @@ function endFight(won) {
     }
     // Track best monster score ever beaten
     if (!save.bestScore || f.entry.score > save.bestScore) save.bestScore = f.entry.score;
+    // Unlock loot equip buttons now that the monster is defeated
+    window._fightActive = false;
+    if (!already && window._pendingDrops) {
+      renderLootSlot(document.getElementById('loot-slot-1'), window._pendingDrops[0], 0);
+      renderLootSlot(document.getElementById('loot-slot-2'), window._pendingDrops[1], 1);
+    }
     writeSave();
     sbWriteLeaderboard(save);
     updateXpBar();

@@ -299,6 +299,7 @@ function renderLootSlot(slotEl, item, idx) {
   const canEquip  = item.slot && ['helmet','amulet','chest','gloves','boots','charm'].includes(item.slot);
   const equipLabel = 'Equip';
   const already   = window._claimedLoot && window._claimedLoot[idx];
+  const locked    = !!window._fightActive;
   const spriteUrl = getSpriteUrl(item.name, item.slot);
   slotEl.style.borderColor = rc.color + '70';
   slotEl.style.boxShadow   = `0 0 8px ${rc.color}30`;
@@ -314,7 +315,10 @@ function renderLootSlot(slotEl, item, idx) {
         : `<i class="ti ${item.icon||'ti-sword'}" style="font-size:18px;color:${rc.color};flex-shrink:0"></i>`}
     </div>
     ${canEquip
-      ? `<button class="loot-equip-btn${already?' claimed':''}" onclick="equipFromLoot(${idx})" ${already?'disabled':''}>${already?'<i class="ti ti-check"></i> Equipped':equipLabel}</button>`
+      ? (locked
+          ? `<button class="loot-equip-btn" disabled style="opacity:0.35;cursor:not-allowed" title="Defeat the monster first"><i class="ti ti-lock" style="font-size:10px"></i></button>`
+          : `<button class="loot-equip-btn${already?' claimed':''}" onclick="equipFromLoot(${idx})" ${already?'disabled':''}>${already?'<i class="ti ti-check"></i> Equipped':equipLabel}</button>`
+        )
       : '<div style="font-size:9px;color:var(--text-tertiary);margin-top:3px;text-align:center">Cannot equip</div>'
     }`;
   slotEl.onmouseenter = () => showSlotTip(slotEl, tipHtml, true);
