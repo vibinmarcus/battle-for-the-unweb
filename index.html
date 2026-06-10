@@ -93,6 +93,7 @@
 
   <!-- Player inventory -->
   <div class="inv-col">
+    <button class="mob-panel-close" onclick="closeMobPanels()" title="Close"><i class="ti ti-x"></i></button>
     <div id="invPanel" style="display:none" class="panel">
       <div class="inv-char-header">
         <div id="charAvatarInv" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin:0 auto 3px"></div>
@@ -244,6 +245,12 @@
         <button onclick="goHome()" style="font-size:12px;padding:5px 9px"><i class="ti ti-home"></i></button>
       </div>
 
+      <!-- Mobile panel toggles (hidden on desktop) -->
+      <div class="mob-panel-toggles">
+        <button onclick="toggleMobPanel('inv')" style="flex:1;font-size:11px;padding:5px 0"><i class="ti ti-backpack"></i> Inventory</button>
+        <button onclick="toggleMobPanel('loot')" style="flex:1;font-size:11px;padding:5px 0"><i class="ti ti-sword"></i> Loot</button>
+      </div>
+
       <!-- URL input -->
       <div class="input-row">
         <input type="text" id="urlInput" placeholder="https://example.com — enter any website to fight" />
@@ -337,6 +344,7 @@
 
   <!-- Monster loot -->
   <div class="loot-col">
+    <button class="mob-panel-close" onclick="closeMobPanels()" title="Close"><i class="ti ti-x"></i></button>
     <div id="lootPanel" style="display:none" class="panel">
       <div class="panel-title"><i class="ti ti-sword"></i> Monster loot</div>
       <div id="loot-slot-1" class="loot-slot"><div class="loot-empty">Defeat a monster to claim loot</div></div>
@@ -396,6 +404,30 @@
 <script src="src/auth.js"></script>
 <script src="src/main.js"></script>
 <script src="src/pentagram.js"></script>
+
+<div id="mobPanelBackdrop" class="mob-panel-backdrop" onclick="closeMobPanels()"></div>
+
+<script>
+function toggleMobPanel(which) {
+  var inv = document.querySelector('.inv-col');
+  var loot = document.querySelector('.loot-col');
+  var bd = document.getElementById('mobPanelBackdrop');
+  if (which === 'inv') {
+    var open = inv.classList.toggle('mob-open');
+    loot.classList.remove('mob-open');
+    bd.classList.toggle('active', open);
+  } else {
+    var open = loot.classList.toggle('mob-open');
+    inv.classList.remove('mob-open');
+    bd.classList.toggle('active', open);
+  }
+}
+function closeMobPanels() {
+  document.querySelector('.inv-col').classList.remove('mob-open');
+  document.querySelector('.loot-col').classList.remove('mob-open');
+  document.getElementById('mobPanelBackdrop').classList.remove('active');
+}
+</script>
 
 </body>
 </html>
