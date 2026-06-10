@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 const SAVE_KEY = 'bftuw_v1';
-const PROXY    = 'https://api.allorigins.win/raw?url=';
+const PROXY    = '/api/proxy?url=';
 
 /* ─── Known sites ──────────────────────────────────────────── */
 const KNOWN_SITES = {
@@ -33,27 +33,27 @@ const KNOWN_SITES = {
 
 /* ─── Starter site suggestions ────────────────────────────── */
 const STARTER_SITES = [
-  { url:'berkshirehathaway.com', label:'Berkshire Hathaway', score:3  },
-  { url:'info.cern.ch',          label:'CERN (first website)',score:3  },
-  { url:'motherfuckingwebsite.com',label:'motherfucking…',   score:4  },
-  { url:'ifconfig.me',           label:'ifconfig.me',         score:4  },
-  { url:'ascii.cl',              label:'ASCII Table',         score:5  },
-  { url:'text.npr.org',          label:'NPR Text',            score:6  },
-  { url:'httpbin.org',           label:'httpbin',             score:6  },
-  { url:'lite.cnn.com',          label:'CNN Lite',            score:7  },
-  { url:'68k.news',              label:'68k News',            score:7  },
-  { url:'drudgereport.com',      label:'Drudge Report',       score:10 },
-  { url:'paulgraham.com',        label:'Paul Graham',         score:10 },
-  { url:'ycombinator.com',       label:'Y Combinator',        score:12 },
-  { url:'w3.org',                label:'W3C',                 score:13 },
-  { url:'gutenberg.org',         label:'Project Gutenberg',   score:14 },
-  { url:'craigslist.org',        label:'Craigslist',          score:15 },
-  { url:'lobste.rs',             label:'Lobsters',            score:17 },
-  { url:'xkcd.com',              label:'XKCD',                score:18 },
-  { url:'slashdot.org',          label:'Slashdot',            score:22 },
-  { url:'krebsonsecurity.com',   label:'Krebs on Security',   score:24 },
-  { url:'archive.org',           label:'Internet Archive',    score:24 },
-  { url:'neal.fun',              label:'Neal.fun',            score:28 },
+  { url:'berkshirehathaway.com', label:'Berkshire Hathaway', score:5  },
+  { url:'info.cern.ch',          label:'CERN (first website)',score:5  },
+  { url:'motherfuckingwebsite.com',label:'motherfucking…',   score:5  },
+  { url:'ifconfig.me',           label:'ifconfig.me',         score:8  },
+  { url:'ascii.cl',              label:'ASCII Table',         score:8  },
+  { url:'68k.news',              label:'68k News',            score:10 },
+  { url:'text.npr.org',          label:'NPR Text',            score:12 },
+  { url:'httpbin.org',           label:'httpbin',             score:12 },
+  { url:'lite.cnn.com',          label:'CNN Lite',            score:12 },
+  { url:'paulgraham.com',        label:'Paul Graham',         score:15 },
+  { url:'drudgereport.com',      label:'Drudge Report',       score:20 },
+  { url:'ycombinator.com',       label:'Y Combinator',        score:25 },
+  { url:'gutenberg.org',         label:'Project Gutenberg',   score:25 },
+  { url:'w3.org',                label:'W3C',                 score:28 },
+  { url:'craigslist.org',        label:'Craigslist',          score:30 },
+  { url:'lobste.rs',             label:'Lobsters',            score:32 },
+  { url:'xkcd.com',              label:'XKCD',                score:32 },
+  { url:'krebsonsecurity.com',   label:'Krebs on Security',   score:38 },
+  { url:'slashdot.org',          label:'Slashdot',            score:40 },
+  { url:'archive.org',           label:'Internet Archive',    score:42 },
+  { url:'neal.fun',              label:'Neal.fun',            score:45 },
 ];
 
 /* ─── Character classes ────────────────────────────────────── */
