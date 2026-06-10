@@ -292,20 +292,28 @@ async function summonMonster() {
     // Generate two independent drops. Re-roll slot 2 once if it lands on an
     // identical item (same slot + name as slot 1) — keeps duplicates rare but
     // intentionally possible if the re-roll still matches.
-    let _d1, _d2;
+    const slot3 = parsed.score >= 25;
+    const slot4 = parsed.score >= 40;
+    let _d1, _d2, _d3, _d4;
     if (!already) {
       _d1 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
       _d2 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
       if (_d1 && _d2 && _d1.slot === _d2.slot && _d1.name === _d2.name)
         _d2 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+      if (slot3) _d3 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+      if (slot4) _d4 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
     }
-    window._pendingDrops = already ? [null, null] : [_d1, _d2];
+    window._pendingDrops = already ? [null,null,null,null] : [_d1, _d2, _d3||null, _d4||null];
     window._claimedLoot  = {};
     window._fightActive  = !already;  // lock equip until monster is beaten
+
+    resetLootPanel(parsed.score);
 
     if (!already) {
       renderLootSlot(document.getElementById('loot-slot-1'), window._pendingDrops[0], 0);
       renderLootSlot(document.getElementById('loot-slot-2'), window._pendingDrops[1], 1);
+      if (slot3) renderLootSlot(document.getElementById('loot-slot-3'), window._pendingDrops[2], 2);
+      if (slot4) renderLootSlot(document.getElementById('loot-slot-4'), window._pendingDrops[3], 3);
     } else {
       document.getElementById('loot-slot-1').innerHTML = '<div class="loot-empty">Already defeated — reduced XP only</div>';
     }

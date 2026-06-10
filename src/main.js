@@ -282,15 +282,21 @@ function renderInventory() {
   renderCharmSlots();
 }
 
-function resetLootPanel() {
+function resetLootPanel(score) {
+  const slot3 = score >= 25;
+  const slot4 = score >= 40;
   document.getElementById('loot-slot-1').className   = 'loot-slot';
   document.getElementById('loot-slot-1').innerHTML   = '<div class="loot-empty">Defeat a monster to claim loot</div>';
   document.getElementById('loot-slot-2').className   = 'loot-slot';
   document.getElementById('loot-slot-2').innerHTML   = '<div class="loot-empty" style="opacity:0.4"></div>';
-  document.getElementById('loot-slot-3').className   = 'loot-slot locked';
-  document.getElementById('loot-slot-3').innerHTML   = '<div class="loot-empty"><i class="ti ti-lock" style="font-size:12px;display:block;margin-bottom:3px"></i>Slot 3</div>';
-  document.getElementById('loot-slot-4').className   = 'loot-slot locked';
-  document.getElementById('loot-slot-4').innerHTML   = '<div class="loot-empty"><i class="ti ti-lock" style="font-size:12px;display:block;margin-bottom:3px"></i>Slot 4</div>';
+  document.getElementById('loot-slot-3').className   = slot3 ? 'loot-slot' : 'loot-slot locked';
+  document.getElementById('loot-slot-3').innerHTML   = slot3
+    ? '<div class="loot-empty" style="opacity:0.4"></div>'
+    : '<div class="loot-empty"><i class="ti ti-lock" style="font-size:12px;display:block;margin-bottom:3px"></i>Slot 3</div>';
+  document.getElementById('loot-slot-4').className   = slot4 ? 'loot-slot' : 'loot-slot locked';
+  document.getElementById('loot-slot-4').innerHTML   = slot4
+    ? '<div class="loot-empty" style="opacity:0.4"></div>'
+    : '<div class="loot-empty"><i class="ti ti-lock" style="font-size:12px;display:block;margin-bottom:3px"></i>Slot 4</div>';
 }
 
 function renderLootSlot(slotEl, item, idx) {

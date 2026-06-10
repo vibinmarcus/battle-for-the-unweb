@@ -157,8 +157,10 @@ function endFight(won) {
     // Unlock loot equip buttons now that the monster is defeated
     window._fightActive = false;
     if (!already && window._pendingDrops) {
-      renderLootSlot(document.getElementById('loot-slot-1'), window._pendingDrops[0], 0);
-      renderLootSlot(document.getElementById('loot-slot-2'), window._pendingDrops[1], 1);
+      [0,1,2,3].forEach(i => {
+        const el = document.getElementById(`loot-slot-${i+1}`);
+        if (el && !el.classList.contains('locked')) renderLootSlot(el, window._pendingDrops[i], i);
+      });
     }
     writeSave();
     sbWriteLeaderboard(save);
