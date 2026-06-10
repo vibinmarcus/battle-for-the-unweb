@@ -194,21 +194,6 @@
           </div>
         </div>
       </div>
-      <!-- leaderboard panel -->
-      <div id="leaderboardPanel" style="display:none;margin-top:10px">
-        <div class="lb-header">
-          <div class="lb-title"><i class="ti ti-sword" style="margin-right:5px;color:var(--gold)"></i>Hunter Rankings</div>
-          <button onclick="refreshLeaderboard()" class="lb-refresh">↻ refresh</button>
-        </div>
-        <div class="lb-cols">
-          <div class="lb-col-lbl">#</div>
-          <div class="lb-col-lbl">Hunter</div>
-          <div class="lb-col-lbl right">Level</div>
-          <div class="lb-col-lbl right">Kills</div>
-          <div class="lb-col-lbl right">Best Kill</div>
-        </div>
-        <div id="lbRows"></div>
-      </div>
       </div><!-- /homeContent -->
     </div>
 
@@ -367,6 +352,25 @@
 <!-- Scripts — load order matters: data → tiers → meta → loot → monster → combat → bestiary → auth → main → pentagram -->
 <script src="src/data.js"></script>
 <script src="src/tiers.js"></script>
+<!-- Leaderboard floating button + card -->
+<button id="lbToggleBtn" onclick="toggleLeaderboard()" title="Hunter Rankings" style="display:none">
+  <i class="ti ti-sword"></i>
+</button>
+<div id="leaderboardCard" style="display:none">
+  <div class="lb-header">
+    <div class="lb-title"><i class="ti ti-sword" style="margin-right:5px;color:var(--gold)"></i>Hunter Rankings</div>
+    <button onclick="refreshLeaderboard()" class="lb-refresh">↻ refresh</button>
+  </div>
+  <div class="lb-cols">
+    <div class="lb-col-lbl">#</div>
+    <div class="lb-col-lbl">Hunter</div>
+    <div class="lb-col-lbl right">Level</div>
+    <div class="lb-col-lbl right">Kills</div>
+    <div class="lb-col-lbl right">Best Kill</div>
+  </div>
+  <div id="lbRows"></div>
+</div>
+
 <script src="src/meta.js"></script>
 <script src="src/loot.js"></script>
 <script src="src/monster.js"></script>

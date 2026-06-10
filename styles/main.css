@@ -497,13 +497,37 @@ button.primary:hover { background: var(--gold-lt); }
 }
 .save-stats { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border-dark); flex-wrap: wrap; }
 
-/* ─── Leaderboard panel ──────────────────────────────────── */
-#leaderboardPanel {
-  max-width: 440px; margin: 0 auto;
+/* ─── Leaderboard floating UI ────────────────────────────── */
+#lbToggleBtn {
+  position: fixed; bottom: 18px; left: 18px; z-index: 200;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: #1a0820; border: 1px solid var(--border-mid);
+  color: var(--text-secondary); font-size: 16px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, color .15s, box-shadow .15s;
+}
+#lbToggleBtn:hover, #lbToggleBtn.lb-open {
+  border-color: var(--gold); color: var(--gold-lt);
+  box-shadow: 0 0 10px rgba(232,48,74,.25);
+}
+#leaderboardCard {
+  position: fixed; bottom: 66px; left: 18px; z-index: 199;
+  width: 340px;
   background: var(--bg-card);
-  border: 1px solid var(--border-dark);
+  border: 1px solid var(--border-mid);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  animation: lb-rise .15s ease;
+}
+@keyframes lb-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#leaderboardCard .lb-cols,
+#leaderboardCard .lb-row {
+  grid-template-columns: 26px 1fr 46px 40px 54px;
 }
 .lb-header {
   display: flex; align-items: center; justify-content: space-between;

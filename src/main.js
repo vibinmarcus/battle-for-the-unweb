@@ -71,11 +71,20 @@ function goLoadAdventure() {
   renderGame();
 }
 
+let _lbOpen = false;
+
+function toggleLeaderboard() {
+  _lbOpen = !_lbOpen;
+  const card = document.getElementById('leaderboardCard');
+  const btn  = document.getElementById('lbToggleBtn');
+  card.style.display = _lbOpen ? '' : 'none';
+  btn.classList.toggle('lb-open', _lbOpen);
+  if (_lbOpen) renderLeaderboard();
+}
+
 async function renderLeaderboard() {
-  const panel = document.getElementById('leaderboardPanel');
-  if (!panel) return;
-  panel.style.display = '';
   const rows = document.getElementById('lbRows');
+  if (!rows) return;
   rows.innerHTML = '<div class="lb-empty">Loading…</div>';
   const data = await sbFetchLeaderboard();
   if (!data.length) { rows.innerHTML = '<div class="lb-empty">No hunters ranked yet — be the first!</div>'; return; }
@@ -125,7 +134,9 @@ function renderHome() {
     sp.style.display = 'none';
     document.getElementById('spDelete').style.display = 'none';
   }
-  renderLeaderboard();
+  // Show the leaderboard toggle button when logged in
+  const lbBtn = document.getElementById('lbToggleBtn');
+  if (lbBtn && sbUser()) lbBtn.style.display = 'flex';
 }
 
 function renderClassGrid() {
@@ -473,3 +484,15 @@ async function signOut() {
 
 document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') summonMonster(); });
 document.getElementById('authEmail').addEventListener('keydown', e => { if (e.key === 'Enter') authSendLink(); });
+
+// Close leaderboard card when clicking outside
+document.addEventListener('click', e => {
+  if (!_lbOpen) return;
+  const card = document.getElementById('leaderboardCard');
+  const btn  = document.getElementById('lbToggleBtn');
+  if (!card.contains(e.target) && !btn.contains(e.target)) {
+    _lbOpen = false;
+    card.style.display = 'none';
+    btn.classList.remove('lb-open');
+  }
+});
