@@ -81,20 +81,18 @@ function generateDrop(score, metaTokens, siteTitle) {
     const w = pickMeta(metaTokens, fb);
     const isSmall = m.name === 'Small Charm';
     // Charm prop pool — 2 random distinct picks
-    const CHARM_PROPS = [
-      () => '+' + ri(3,20)  + ' to Life',
-      () => '+' + ri(1,5)   + '% All Resist',
-      () => '+' + ri(1,10)  + '% Gold Find',
-      () => '+' + ri(5,50)  + ' Gold Find',
-      () => '+' + ri(1,15)  + '% Double Gold Chance',
-      () => '+' + ri(1,5)   + ' Gold per Round',
-      () => '+' + ri(5,20)  + '% Gold from Elite Kills',
-      () => '+' + ri(1,8)   + '% Enhanced Damage',
-      () => '+' + ri(2,8)   + ' to Str',
-      () => '+' + ri(1,3)   + ' to All Skills',
+    const CHARM_GUARANTEED = [
+      () => '+' + ri(1,10) + '% Gold Find',
+      () => '+' + ri(5,50) + ' Gold Find',
     ];
-    const shuffled = [...CHARM_PROPS].sort(() => Math.random() - 0.5);
-    const props = [shuffled[0](), shuffled[1]()];
+    const CHARM_LARGE_ONLY = [
+      () => '+' + ri(1,15) + '% Double Gold Chance',
+      () => '+' + ri(1,5)  + ' Gold per Round',
+      () => '+' + ri(5,20) + '% Gold from Elite Kills',
+    ];
+    const props = isSmall
+      ? [pick(CHARM_GUARANTEED)()]
+      : [pick(CHARM_GUARANTEED)(), pick(CHARM_LARGE_ONLY)()];
     return { name:m.name+' of '+w, type:'Charm', quality:'Charm', props, icon:'ti-hexagon', slot:'charm', charmSize: isSmall ? 'small' : 'large', rc:RC.Charm };
   }
 
