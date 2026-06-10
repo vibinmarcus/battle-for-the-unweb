@@ -34,6 +34,15 @@ function _patchSave() {
   if (!save.equipped.charms) save.equipped.charms = [null, null];
   if (!save.domainLinks) save.domainLinks = {};
   if (!save.bestScore)   save.bestScore   = 0;
+  if (!save.gold)        save.gold        = 0;
+}
+
+function renderGold() {
+  const el = document.getElementById('goldAmountEl');
+  const wrap = document.getElementById('goldDisplay');
+  if (!el || !wrap) return;
+  el.textContent = (save.gold || 0).toLocaleString();
+  wrap.style.display = save.created ? 'flex' : 'none';
 }
 
 let _saveTimer = null;
@@ -212,6 +221,7 @@ async function startAdventure() {
 function renderGame() {
   updateXpBar();
   renderCharBar();
+  renderGold();
   renderInventory();
   renderBestiary();
   ['monsterPanel','errBox','loading'].forEach(id => document.getElementById(id).style.display = 'none');

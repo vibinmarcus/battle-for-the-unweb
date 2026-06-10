@@ -1,9 +1,19 @@
 let fightState = null;
 
+function _allEquippedItems() {
+  const eq = save.equipped || {};
+  const gear = Object.entries(eq)
+    .filter(([k]) => k !== 'charms')
+    .map(([, v]) => v)
+    .filter(Boolean);
+  const charms = (eq.charms || []).filter(Boolean);
+  return [...gear, ...charms];
+}
+
 function calcEquipmentBonuses() {
   let atkBonus = 0, defBonus = 0, hpBonus = 0, atkPct = 0;
-  for (const item of Object.values(save.equipped || {})) {
-    if (!item || !item.props) continue;
+  for (const item of _allEquippedItems()) {
+    if (!item.props) continue;
     for (const prop of item.props) {
       const s   = prop.toLowerCase();
       const num = parseInt((prop.match(/\d+/) || ['0'])[0]);
@@ -11,11 +21,12 @@ function calcEquipmentBonuses() {
       if (s.includes('defense') && !s.includes('deadly'))       defBonus += num;
       if (s.includes('strength'))                                { atkBonus += Math.round(num * 0.2); defBonus += Math.round(num * 0.1); }
       if (s.includes('life') && !s.includes('stolen') && !s.includes('mana') && !s.includes('per level')) hpBonus += num;
-      if (s.includes('enh') && s.includes('dmg'))               atkPct   += num;
+      if (s.includes('enh') && (s.includes('dmg') || s.includes('damage'))) atkPct += num;
       if (s.includes('max dmg'))                                 atkBonus += num;
       if (s.includes('all skills'))                              atkBonus += num * 2;
       if (s.includes('deadly strike'))                           atkBonus += Math.round(num * 0.2);
       if (s.includes('resist'))                                  defBonus += Math.round(num * 0.15);
+      if (s.includes('to str') || s.includes('to strength'))    { atkBonus += Math.round(num * 0.2); defBonus += Math.round(num * 0.1); }
       const dmgM = prop.match(/Dmg:\s*(\d+)-(\d+)/i);
       if (dmgM) atkBonus += Math.round((+dmgM[1] + +dmgM[2]) / 2 * 0.3);
       const defM = prop.match(/Def:\s*(\d+)-(\d+)/i);
@@ -23,6 +34,32 @@ function calcEquipmentBonuses() {
     }
   }
   return { atkBonus, defBonus, hpBonus, atkPct };
+}
+
+function calcGoldBonuses() {
+  let goldPct = 0, goldFlat = 0, goldDouble = 0, goldPerRound = 0, goldElite = 0;
+  for (const charm of (save.equipped?.charms || []).filter(Boolean)) {
+    for (const prop of (charm.props || [])) {
+      const s   = prop.toLowerCase();
+      const num = parseFloat((prop.match(/[\d.]+/) || ['0'])[0]);
+      if (s.includes('% gold find'))             goldPct       += num;
+      if (s.includes('gold find') && !s.includes('%')) goldFlat += num;
+      if (s.includes('double gold'))             goldDouble    += num;
+      if (s.includes('gold per round'))          goldPerRound  += num;
+      if (s.includes('gold from elite'))         goldElite     += num;
+    }
+  }
+  return { goldPct, goldFlat, goldDouble, goldPerRound, goldElite };
+}
+
+function rollBaseGold(score, lvl) {
+  // 4 tiers: T1 lvl 1-19, T2 lvl 20-29, T3 lvl 30-39, T4 lvl 40+
+  const ranges = [[1, 30], [10, 80], [30, 150], [80, 300]];
+  const t = lvl < 20 ? 0 : lvl < 30 ? 1 : lvl < 40 ? 2 : 3;
+  const [mn, mx] = ranges[t];
+  const base = mn + Math.floor(Math.random() * (mx - mn + 1));
+  // scale by monster difficulty (50–100% of base at score 0–50)
+  return Math.round(base * (0.5 + (Math.min(score, 50) / 50) * 0.5));
 }
 
 function initFight(entry) {
@@ -162,7 +199,19 @@ function endFight(won) {
         if (el && !el.classList.contains('locked')) renderLootSlot(el, window._pendingDrops[i], i);
       });
     }
+    // ── Gold drop ────────────────────────────────────────────
+    const { rank: gRank } = getHunterRank(save.playerXP);
+    const gb  = calcGoldBonuses();
+    let gold  = rollBaseGold(f.entry.score, gRank.lvl);
+    const doubled = gb.goldDouble > 0 && Math.random() * 100 < gb.goldDouble;
+    if (doubled) gold *= 2;
+    if (f.entry.score >= 25 && gb.goldElite > 0) gold = Math.round(gold * (1 + gb.goldElite / 100));
+    gold += Math.round(gb.goldPerRound * f.round);
+    gold  = Math.min(Math.round(gold * (1 + gb.goldPct / 100)) + Math.round(gb.goldFlat), 500);
+    if (!already) { save.gold = (save.gold || 0) + gold; }
+    // ─────────────────────────────────────────────────────────
     writeSave();
+    renderGold();
     if (window.innerWidth <= 640) {
       var lootCol = document.querySelector('.loot-col');
       var bd = document.getElementById('mobPanelBackdrop');
@@ -172,7 +221,7 @@ function endFight(won) {
     sbWriteLeaderboard(save);
     updateXpBar();
     renderBestiary();
-    setTimeout(() => showToast(`+${awarded} XP${already?' (repeat)':''}${linkBonus ? ' +15% linked domain bonus!' : ''}${(window._pendingDrops||[]).some(Boolean)?' · loot dropped!':''}`), 300);
+    setTimeout(() => showToast(`+${awarded} XP${already?' (repeat)':''}${linkBonus ? ' +15% linked domain bonus!' : ''}${!already ? ` · +${gold}g${doubled?' (doubled!)':''}` : ''}${(window._pendingDrops||[]).some(Boolean)?' · loot dropped!':''}`), 300);
     document.getElementById('postFight').style.display = '';
 
     const metrics = [
