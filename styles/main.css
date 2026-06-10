@@ -350,6 +350,41 @@ button.primary:hover { background: var(--gold-lt); }
   50%       { opacity: 1; }
 }
 .pgl-lit { animation: pentaGlow 2.8s ease-in-out infinite; }
+
+/* ─── Pentagram CSS animations ───────────────────────────── */
+/* Replaces JS rAF loops — runs on compositor thread          */
+@keyframes draw-pline    { from { stroke-dashoffset: 448;  } to { stroke-dashoffset: 0; } }
+@keyframes draw-pentagon { from { stroke-dashoffset: 1382; opacity: 0; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes draw-circle   { from { stroke-dashoffset: 1634; opacity: 0; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes penta-fade    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes penta-embers  { from { opacity: 0; } to { opacity: 0.6; } }
+
+/* Lines — 700ms each, 120ms gaps, 400ms initial delay (matches original JS) */
+#pl1 { animation: draw-pline 700ms ease-in-out  400ms both; }
+#pl2 { animation: draw-pline 700ms ease-in-out 1220ms both; }
+#pl3 { animation: draw-pline 700ms ease-in-out 2040ms both; }
+#pl4 { animation: draw-pline 700ms ease-in-out 2860ms both; }
+#pl5 { animation: draw-pline 700ms ease-in-out 3680ms both; }
+
+/* Vertex dots appear as each line arrives */
+#pd1,  #pdg1  { animation: penta-fade 250ms ease  400ms both; }
+#pd2,  #pdg2  { animation: penta-fade 250ms ease 1100ms both; }
+#pd3,  #pdg3  { animation: penta-fade 250ms ease 1920ms both; }
+#pd4,  #pdg4  { animation: penta-fade 250ms ease 2740ms both; }
+#pd5,  #pdg5  { animation: penta-fade 250ms ease 3560ms both; }
+
+/* Glow lines pulse after their line finishes */
+#pgl1 { animation: pentaGlow 2.8s ease-in-out 1100ms infinite; }
+#pgl2 { animation: pentaGlow 2.8s ease-in-out 1920ms infinite; }
+#pgl3 { animation: pentaGlow 2.8s ease-in-out 2740ms infinite; }
+#pgl4 { animation: pentaGlow 2.8s ease-in-out 3560ms infinite; }
+#pgl5 { animation: pentaGlow 2.8s ease-in-out 4380ms infinite; }
+
+/* Pentagon traces, then circle, after all lines done */
+#pPentagon { animation: draw-pentagon  900ms ease 4380ms both; }
+#pOuterC   { animation: draw-circle   1400ms ease 4480ms both; }
+#pOuterCG  { animation: draw-circle   1400ms ease 4480ms both; }
+#pEmbers   { animation: penta-embers   800ms ease 5080ms both; }
 .err-box {
   background: var(--bg-danger);
   border: 0.5px solid var(--border-danger);
