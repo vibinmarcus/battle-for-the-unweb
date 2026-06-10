@@ -470,12 +470,13 @@ function resetForm() {
   if (fbd) fbd.classList.remove('active');
   var fd = document.getElementById('mobFightDismiss');
   if (fd) fd.style.display = 'none';
-  // Return loot col to .root if it was in bottom-sheet mode
-  var lc = document.querySelector('.loot-col');
-  if (lc && lc.classList.contains('mob-modal')) {
-    lc.classList.remove('mob-modal');
-    var root = document.querySelector('.root');
-    if (root) root.appendChild(lc);
+  // Return #lootPanel to .loot-col if it was in bottom-sheet mode
+  var lp = document.getElementById('lootPanel');
+  if (lp && lp.classList.contains('mob-modal')) {
+    lp.classList.remove('mob-modal');
+    lp.style.display = 'none';
+    var lc = document.querySelector('.loot-col');
+    if (lc) lc.appendChild(lp);
   }
 }
 

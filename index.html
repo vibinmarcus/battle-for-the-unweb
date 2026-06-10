@@ -355,6 +355,7 @@
   <div class="loot-col">
     <button class="mob-panel-close" onclick="closeMobPanels()" title="Close"><i class="ti ti-x"></i></button>
     <div id="lootPanel" style="display:none" class="panel">
+      <div class="mob-fight-handle"></div>
       <div class="panel-title"><i class="ti ti-sword"></i> Monster loot</div>
       <div id="loot-slot-1" class="loot-slot"><div class="loot-empty">Defeat a monster to claim loot</div></div>
       <div id="loot-slot-2" class="loot-slot"><div class="loot-empty" style="opacity:0.4"></div></div>
@@ -434,21 +435,15 @@ function toggleMobPanel(which) {
 }
 function closeMobPanels() {
   document.querySelector('.inv-col').classList.remove('mob-open');
-  var loot = document.querySelector('.loot-col');
-  loot.classList.remove('mob-open');
-  // If loot was in bottom-sheet mode, return it to .root
-  if (loot.classList.contains('mob-modal')) {
-    loot.classList.remove('mob-modal');
-    document.querySelector('.root').appendChild(loot);
-    document.getElementById('mobFightBackdrop').classList.remove('active');
-  }
+  document.querySelector('.loot-col').classList.remove('mob-open');
   document.getElementById('mobPanelBackdrop').classList.remove('active');
 }
 function closeMobLoot() {
-  var loot = document.querySelector('.loot-col');
-  if (loot && loot.classList.contains('mob-modal')) {
-    loot.classList.remove('mob-modal');
-    document.querySelector('.root').appendChild(loot);
+  var lp = document.getElementById('lootPanel');
+  if (lp && lp.classList.contains('mob-modal')) {
+    lp.classList.remove('mob-modal');
+    lp.style.display = 'none';
+    document.querySelector('.loot-col').appendChild(lp); // return to drawer
     document.getElementById('mobFightBackdrop').classList.remove('active');
   }
 }

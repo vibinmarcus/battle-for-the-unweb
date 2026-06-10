@@ -844,12 +844,11 @@ button.primary:hover { background: var(--gold-lt); }
     animation: mob-fight-up 0.3s ease;
   }
 
-  /* Loot as bottom-sheet (same position as monster panel) */
-  .loot-col.mob-modal {
+  /* Loot as bottom-sheet — identical to #monsterPanel.mob-modal */
+  #lootPanel.mob-modal {
     position: fixed;
     bottom: 0; left: 0; right: 0;
     z-index: 149;
-    width: auto;
     background: var(--bg-primary);
     border-radius: 16px 16px 0 0;
     border: 0.5px solid var(--border-mid);
@@ -857,8 +856,6 @@ button.primary:hover { background: var(--gold-lt); }
     padding: 10px 12px 28px;
     max-height: 88vh;
     overflow-y: auto;
-    transform: none !important;
-    transition: none !important;
     animation: mob-fight-up 0.3s ease;
   }
 

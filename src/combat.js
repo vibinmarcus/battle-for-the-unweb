@@ -271,13 +271,13 @@ function closeMobFight() {
   sg.insertBefore(panel, pf);
   document.getElementById('mobFightBackdrop').classList.remove('active');
   document.getElementById('mobFightDismiss').style.display = 'none';
-  // Show loot as bottom-sheet on victory
+  // Show loot as bottom-sheet on victory — identical pattern to #monsterPanel
   if (fightState && fightState.won) {
-    var lootCol = document.querySelector('.loot-col');
-    if (lootCol) {
-      document.getElementById('lootPanel').style.display = ''; // ensure visible
-      lootCol.classList.add('mob-modal');
-      document.body.appendChild(lootCol); // escape stacking context
+    var lootPanel = document.getElementById('lootPanel');
+    if (lootPanel) {
+      lootPanel.style.display = '';
+      lootPanel.classList.add('mob-modal');
+      document.body.appendChild(lootPanel); // escape stacking context
       document.getElementById('mobFightBackdrop').classList.add('active');
     }
   }
