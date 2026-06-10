@@ -438,6 +438,7 @@ button.primary:hover { background: var(--gold-lt); }
 .action-row button { flex: 1; font-size: 12px; }
 
 /* ─── Bestiary ───────────────────────────────────────────── */
+.bestiary-section.collapsed #bestiaryList { display: none; }
 .bestiary-section { border-top: 0.5px solid var(--border-dark); padding-top: 14px; }
 .bestiary-header {
   font-size: 13px; font-weight: 700; color: var(--text-primary);
@@ -803,4 +804,9 @@ button.primary:hover { background: var(--gold-lt); }
 
   /* Scroll buttons irrelevant on mobile */
   #scrollUpBtn, #scrollDownBtn { display: none; }
+
+  /* Bestiary collapsible on mobile */
+  .bestiary-header { cursor: pointer; user-select: none; }
+  #bestiaryChevron { display: inline-block !important; }
+  .bestiary-section:not(.collapsed) #bestiaryChevron { transform: rotate(180deg); }
 }

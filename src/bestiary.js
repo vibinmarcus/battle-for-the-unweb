@@ -2,6 +2,9 @@ function renderBestiary() {
   const list = save.bestiary;
   if (!list.length) { hide('bestiary'); return; }
   show('bestiary');
+  if (window.innerWidth <= 640) {
+    document.getElementById('bestiary').classList.add('collapsed');
+  }
   const victories = list.filter(e => e.outcome === 'victory').length;
   const defeats   = list.filter(e => e.outcome === 'defeat').length;
   document.getElementById('bestiaryCount').textContent =
@@ -28,6 +31,11 @@ function renderBestiary() {
       </div>
     </div>`;
   }).join('');
+}
+
+function toggleBestiary() {
+  if (window.innerWidth > 640) return;
+  document.getElementById('bestiary').classList.toggle('collapsed');
 }
 
 function copyMonster() {
