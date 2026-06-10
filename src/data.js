@@ -94,8 +94,6 @@ const RC = {
   Rare:   { color:'#c8941a', bg:'rgba(200,148,26,0.12)'  },
   Set:    { color:'#4a9e6a', bg:'rgba(74,158,106,0.12)'  },
   Unique: { color:'#c8941a', bg:'rgba(200,148,26,0.15)'  },
-  Rune:   { color:'#d06030', bg:'rgba(208,96,48,0.12)'   },
-  Gem:    { color:'#8a70d0', bg:'rgba(138,112,208,0.12)' },
   Charm:  { color:'#c05080', bg:'rgba(192,80,128,0.12)'  },
 };
 
@@ -106,8 +104,6 @@ const D2A = {
   elite:       [{name:'Archon Plate',type:'Light Armor',def:'410-524',str:103,lv:63,slot:'chest'},{name:'Shako',type:'Helm',def:'98-141',str:50,lv:43,slot:'helmet'},{name:"Griffon's Eye",type:'Helm',def:'150-212',str:78,lv:76,slot:'helmet'},{name:'Myrmidon Greaves',type:'Boots',def:'67-78',str:125,lv:66,slot:'boots'}],
 };
 const D2MISC = [
-  {name:'El Rune',type:'Rune',lv:1},{name:'Tir Rune',type:'Rune',lv:3},{name:'Amn Rune',type:'Rune',lv:11},
-  {name:'Vex Rune',type:'Rune',lv:26},{name:'Ber Rune',type:'Rune',lv:30},{name:'Zod Rune',type:'Rune',lv:33},
   {name:'Grand Charm',type:'Charm'},{name:'Small Charm',type:'Charm'},
 ];
 const D2UA = [

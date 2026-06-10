@@ -78,12 +78,6 @@ function generateDrop(score, metaTokens, siteTitle) {
 
   if (roll < 0.08) {
     const m = pick(D2MISC);
-    if (m.type === 'Rune') {
-      const maxL = Math.max(1, Math.floor(score/3));
-      const pool = D2MISC.filter(x => x.type==='Rune' && x.lv<=maxL);
-      const rune = pool.length ? pick(pool) : D2MISC[0];
-      return { name:rune.name, type:'Rune', quality:'Rune', props:['+'+Math.ceil(rune.lv*1.5)+' Defense', 'All Resist +'+rune.lv], icon:'ti-diamond', slot:null, rc:RC.Rune };
-    }
     const w = pickMeta(metaTokens, fb);
     const isSmall = m.name === 'Small Charm';
     return { name:m.name+' of '+w, type:'Charm', quality:'Charm', props:['+'+ri(3,20)+' to Life', '+'+ri(1,5)+'% All Resist'], icon:'ti-hexagon', slot:'charm', charmSize: isSmall ? 'small' : 'large', rc:RC.Charm };
