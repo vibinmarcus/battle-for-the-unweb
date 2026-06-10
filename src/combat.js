@@ -113,7 +113,10 @@ function logCombat(msg, cls='') {
   if (cls) line.className = cls;
   line.textContent = msg;
   log.appendChild(line);
-  while (log.children.length > 5) log.removeChild(log.firstChild);
+  // Trim oldest lines until content fits within the box (handles wrapped lines)
+  while (log.children.length > 1 && log.scrollHeight > log.clientHeight) {
+    log.removeChild(log.firstChild);
+  }
 }
 
 function ri(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }

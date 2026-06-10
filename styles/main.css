@@ -446,11 +446,6 @@ button.primary:hover { background: var(--gold-lt); }
   font-family: var(--font-mono);
   border: 0.5px solid var(--border-dark);
 }
-.combat-log > div {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .combat-log .hit-player  { color: var(--ember); }
 .combat-log .hit-monster { color: var(--green); }
 .combat-log .miss        { color: var(--text-tertiary); }
