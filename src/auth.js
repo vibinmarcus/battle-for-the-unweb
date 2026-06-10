@@ -117,6 +117,21 @@ async function sbSetMonster(domain, parsed) {
   } catch(_) {}
 }
 
+/* Name uniqueness check — returns true if name is already taken by another user */
+async function sbCheckNameTaken(name) {
+  try {
+    const { data, error } = await _sb
+      .from('leaderboard')
+      .select('user_id')
+      .ilike('char_name', name)
+      .limit(1);
+    if (error || !data) return false;
+    if (data.length === 0) return false;
+    // Allow the current user's own name (e.g. re-creating after delete)
+    return data[0].user_id !== (_currentUser?.id ?? null);
+  } catch(_) { return false; }
+}
+
 /* Cloud save delete */
 async function sbDeleteSave() {
   if (!_currentUser) return;

@@ -192,11 +192,14 @@ function selectClass(id) {
   document.getElementById('charNameInput').value = _generateName(id);
 }
 
-function startAdventure() {
+async function startAdventure() {
   const name   = document.getElementById('charNameInput').value.trim();
   const errEl  = document.getElementById('createErr');
   if (!name)          { errEl.textContent = 'Please enter a name.';   errEl.style.display = ''; return; }
   if (!selectedClass) { errEl.textContent = 'Please choose a class.'; errEl.style.display = ''; return; }
+  errEl.textContent = 'Checking name…'; errEl.style.display = '';
+  const taken = await sbCheckNameTaken(name);
+  if (taken) { errEl.textContent = 'That name is already taken. Choose another.'; return; }
   errEl.style.display = 'none';
   save = { created:true, charName:name, classId:selectedClass, playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
   writeSave();
