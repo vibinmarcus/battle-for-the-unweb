@@ -68,11 +68,11 @@ const STARTER_SITES = [
 
 /* ─── Character classes ────────────────────────────────────── */
 const CLASSES = [
-  { id:'warrior', name:'Warrior', icon:'ti-shield', desc:'Fearless melee fighter. High defense, solid attack.', color:'#c05030', bg:'rgba(192,80,48,0.2)',  avatar:'W', atkBonus:8,  defBonus:5  },
-  { id:'mage',    name:'Mage',    icon:'ti-wand',   desc:'Master of arcane arts. Highest attack, low defense.', color:'#7a6fd0', bg:'rgba(122,111,208,0.2)',avatar:'M', atkBonus:12, defBonus:2  },
-  { id:'rogue',   name:'Rogue',   icon:'ti-eye',    desc:'Cunning and precise. Balanced offensive stats.', color:'#a09080', bg:'rgba(160,144,128,0.2)',avatar:'R', atkBonus:10, defBonus:4  },
-  { id:'ranger',  name:'Ranger',  icon:'ti-target', desc:'Patient tracker. Good defense, ranged bonuses.', color:'#4a9e6a', bg:'rgba(74,158,106,0.2)', avatar:'Ra', atkBonus:9, defBonus:6  },
-  { id:'paladin', name:'Paladin', icon:'ti-star',   desc:'Holy protector. Highest defense, lower attack.', color:'#c8941a', bg:'rgba(200,148,26,0.2)', avatar:'P', atkBonus:7,  defBonus:8  },
+  { id:'warrior', name:'Warrior', icon:'ti-shield', desc:'Fearless melee fighter. High defense, solid attack.', special:'15% chance to block incoming hits',              color:'#c05030', bg:'rgba(192,80,48,0.2)',  avatar:'W', atkBonus:8,  defBonus:5  },
+  { id:'mage',    name:'Mage',    icon:'ti-wand',   desc:'Master of arcane arts. Highest attack, low defense.', special:'20% chance to crit for 1.75× damage',           color:'#7a6fd0', bg:'rgba(122,111,208,0.2)',avatar:'M', atkBonus:12, defBonus:2  },
+  { id:'rogue',   name:'Rogue',   icon:'ti-eye',    desc:'Cunning and precise. Balanced offensive stats.',      special:'25% chance to dodge incoming attacks',           color:'#a09080', bg:'rgba(160,144,128,0.2)',avatar:'R', atkBonus:10, defBonus:4  },
+  { id:'ranger',  name:'Ranger',  icon:'ti-target', desc:'Patient tracker. Good defense, ranged bonuses.',     special:'Free first strike at 60% ATK before round 1',    color:'#4a9e6a', bg:'rgba(74,158,106,0.2)', avatar:'Ra', atkBonus:9, defBonus:6  },
+  { id:'paladin', name:'Paladin', icon:'ti-star',   desc:'Holy protector. Highest defense, lower attack.',     special:'Regenerate 2 HP at the end of each round',       color:'#c8941a', bg:'rgba(200,148,26,0.2)', avatar:'P', atkBonus:7,  defBonus:8  },
 ];
 
 /* ─── Hunter ranks ─────────────────────────────────────────── */

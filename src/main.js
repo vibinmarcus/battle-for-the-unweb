@@ -124,7 +124,9 @@ function renderHome() {
     av.textContent = cls ? cls.avatar : '?';
     av.style.cssText = `width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;background:${cls?cls.bg:'rgba(100,100,100,0.2)'};color:${cls?cls.color:'#aaa'}`;
     document.getElementById('spName').textContent     = save.charName;
-    document.getElementById('spClass').textContent    = (cls ? cls.name : '') + ' · ' + rank.name;
+    const spCls = document.getElementById('spClass');
+    spCls.textContent = (cls ? cls.name : '') + ' · ' + rank.name;
+    if (cls?.special) { spCls.title = '✦ ' + cls.special; spCls.style.cursor = 'help'; }
     document.getElementById('spXP').textContent       = save.playerXP.toLocaleString();
     document.getElementById('spDefeated').textContent = save.defeated.length;
     document.getElementById('spItems').textContent    = save.equipment.length;
@@ -145,6 +147,7 @@ function renderClassGrid() {
       <span class="cc-icon"><i class="ti ${c.icon}"></i></span>
       <div class="cc-name">${c.name}</div>
       <div class="cc-desc">${c.desc}</div>
+      <div class="cc-special"><i class="ti ti-sparkles" style="font-size:9px;margin-right:3px"></i>${c.special}</div>
     </div>
   `).join('');
 }
@@ -201,13 +204,17 @@ function renderCharBar() {
   el.style.background = cls.bg;
   el.style.color      = cls.color;
   document.getElementById('charNameEl').textContent  = save.charName;
-  document.getElementById('charClassEl').textContent = cls.name;
+  const clsEl = document.getElementById('charClassEl');
+  clsEl.textContent = cls.name;
+  if (cls.special) { clsEl.title = '✦ ' + cls.special; clsEl.style.cursor = 'help'; }
   const inv = document.getElementById('charAvatarInv');
   inv.textContent      = cls.avatar;
   inv.style.background = cls.bg;
   inv.style.color      = cls.color;
   document.getElementById('charNameInv').textContent  = save.charName;
-  document.getElementById('charClassInv').textContent = cls.name;
+  const clsInv = document.getElementById('charClassInv');
+  clsInv.textContent = cls.name;
+  if (cls.special) { clsInv.title = '✦ ' + cls.special; clsInv.style.cursor = 'help'; }
 }
 
 function renderCharmSlots() {

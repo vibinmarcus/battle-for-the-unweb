@@ -611,6 +611,13 @@ button.primary:hover { background: var(--gold-lt); }
 .class-card .cc-icon { font-size: 18px; color: var(--text-tertiary); margin-bottom: 5px; display: block; }
 .class-card .cc-name { font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
 .class-card .cc-desc { font-size: 10px; color: var(--text-secondary); line-height: 1.3; }
+.class-card .cc-special {
+  font-size: 9px; color: var(--gold); line-height: 1.3; margin-top: 5px;
+  border-top: 1px solid var(--border-dark); padding-top: 5px;
+  opacity: 0; max-height: 0; overflow: hidden;
+  transition: opacity .2s ease, max-height .2s ease;
+}
+.class-card:hover .cc-special { opacity: 1; max-height: 40px; }
 .class-card.selected .cc-icon,
 .class-card.selected .cc-name { color: var(--gold); }
 
