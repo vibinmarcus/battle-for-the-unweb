@@ -99,7 +99,7 @@ const RC = {
 
 /* ─── D2 item bases ────────────────────────────────────────── */
 const D2A = {
-  normal:      [{name:'Quilted Armor',type:'Light Armor',def:'8-11',str:0,lv:0,slot:'chest'},{name:'Cap',type:'Helm',def:'3-5',str:0,lv:0,slot:'helmet'},{name:'Light Gauntlets',type:'Gloves',def:'5-7',str:0,lv:0,slot:'gloves'},{name:'Boots',type:'Boots',def:'2-3',str:0,lv:0,slot:'boots'},{name:'Sash',type:'Belt',def:'2-2',str:0,lv:0,slot:'boots'}],
+  normal:      [{name:'Quilted Armor',type:'Light Armor',def:'8-11',str:0,lv:0,slot:'chest'},{name:'Cap',type:'Helm',def:'3-5',str:0,lv:0,slot:'helmet'},{name:'Light Gauntlets',type:'Gloves',def:'5-7',str:0,lv:0,slot:'gloves'},{name:'Boots',type:'Boots',def:'2-3',str:0,lv:0,slot:'boots'}],
   exceptional: [{name:'Sharktooth Armor',type:'Light Armor',def:'103-115',str:25,lv:20,slot:'chest'},{name:'Basinet',type:'Helm',def:'30-40',str:50,lv:25,slot:'helmet'},{name:'Gauntlets',type:'Gloves',def:'15-18',str:60,lv:21,slot:'gloves'},{name:'War Boots',type:'Boots',def:'34-39',str:125,lv:45,slot:'boots'}],
   elite:       [{name:'Archon Plate',type:'Light Armor',def:'410-524',str:103,lv:63,slot:'chest'},{name:'Shako',type:'Helm',def:'98-141',str:50,lv:43,slot:'helmet'},{name:"Griffon's Eye",type:'Helm',def:'150-212',str:78,lv:76,slot:'helmet'},{name:'Myrmidon Greaves',type:'Boots',def:'67-78',str:125,lv:66,slot:'boots'}],
 };
