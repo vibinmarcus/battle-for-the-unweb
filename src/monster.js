@@ -222,6 +222,7 @@ async function summonMonster() {
     const isKnown = Object.keys(KNOWN_SITES).some(k => domain === k || domain.endsWith('.' + k));
 
     let html = '';
+    let cachedParsed = null;
     if (isKnown) {
       document.getElementById('loadingMsg').textContent = 'Known domain — skipping fetch…';
       // Background fetch for link scraping only — non-blocking
@@ -230,19 +231,31 @@ async function summonMonster() {
         .then(h => { if (h) mergeLinks(domain, h, url); })
         .catch(() => {});
     } else {
-      document.getElementById('loadingMsg').textContent = 'Summoning Site…';
-      try {
-        const r = await fetch(PROXY + encodeURIComponent(url));
-        if (r.ok) html = await r.text();
-      } catch(_) {}
+      // Check monster score cache first
+      document.getElementById('loadingMsg').textContent = 'Checking bestiary…';
+      cachedParsed = await sbGetMonster(domain);
+      if (!cachedParsed) {
+        document.getElementById('loadingMsg').textContent = 'Summoning Site…';
+        try {
+          const r = await fetch(PROXY + encodeURIComponent(url));
+          if (r.ok) html = await r.text();
+        } catch(_) {}
+      } else {
+        document.getElementById('loadingMsg').textContent = 'Monster found in bestiary…';
+      }
     }
 
     document.getElementById('loadingMsg').textContent = 'Seeking the creature…';
     const [faviconUrl, parsed] = await Promise.all([
       fetchFavicon(url, html),
-      Promise.resolve(analyzeHtml(html, url)),
+      Promise.resolve(cachedParsed || analyzeHtml(html, url)),
     ]);
     parsed.score = Math.min(parsed.score, 50);
+
+    // Cache the analysis for future visits (only for unknown sites we actually fetched)
+    if (!isKnown && !cachedParsed && html) {
+      sbSetMonster(domain, parsed); // fire-and-forget
+    }
 
     const metaTokens = parseMetaTags(html);
 

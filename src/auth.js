@@ -61,6 +61,30 @@ async function sbWriteSave(saveObj) {
   } catch(_) {}
 }
 
+/* Monster score cache — read */
+async function sbGetMonster(domain) {
+  try {
+    const { data, error } = await _sb
+      .from('monsters')
+      .select('parsed')
+      .eq('domain', domain)
+      .single();
+    if (error || !data) return null;
+    return data.parsed;
+  } catch(_) { return null; }
+}
+
+/* Monster score cache — write (upsert) */
+async function sbSetMonster(domain, parsed) {
+  try {
+    await _sb.from('monsters').upsert({
+      domain,
+      parsed,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'domain' });
+  } catch(_) {}
+}
+
 /* Cloud save delete */
 async function sbDeleteSave() {
   if (!_currentUser) return;

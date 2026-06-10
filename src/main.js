@@ -35,9 +35,12 @@ function _patchSave() {
   if (!save.domainLinks) save.domainLinks = {};
 }
 
+let _saveTimer = null;
 function writeSave() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(_) {}
-  sbWriteSave(save); // fire-and-forget
+  // Debounce cloud writes — batch rapid changes into one request
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => sbWriteSave(save), 2000);
 }
 
 function hasSave() { return save.created; }
