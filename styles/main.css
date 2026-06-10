@@ -266,6 +266,7 @@ button.primary:hover { background: var(--gold-lt); }
   margin-bottom: 6px;
   min-height: 66px;
   transition: border-color 0.2s, box-shadow 0.2s;
+  text-align: center;
   position: relative;
   overflow: visible;
 }

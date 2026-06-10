@@ -263,7 +263,7 @@ function renderLootSlot(slotEl, item, idx) {
     ...(item.props||[]).map(p => `<div>${p}</div>`)
   ].join('');
   slotEl.innerHTML = `
-    <div style="display:flex;align-items:center;gap:6px;min-height:36px">
+    <div style="display:flex;align-items:center;justify-content:center;min-height:36px">
       ${spriteUrl
         ? `<img src="${spriteUrl}" width="36" height="36" style="object-fit:contain;image-rendering:pixelated;background:rgba(0,0,0,0.2);border-radius:4px;padding:2px;flex-shrink:0" alt="" />`
         : `<i class="ti ${item.icon||'ti-sword'}" style="font-size:18px;color:${rc.color};flex-shrink:0"></i>`}
