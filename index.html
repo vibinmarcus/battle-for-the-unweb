@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Battle for the Unweb</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div id="confirmDialog" class="confirm-overlay" style="display:none">
+  <div class="confirm-box">
+    <div class="confirm-icon"><i class="ti ti-trash"></i></div>
+    <div class="confirm-msg">Delete your save? This cannot be undone.</div>
+    <div class="confirm-actions">
+      <button onclick="confirmDialogClose(false)">Cancel</button>
+      <button class="confirm-danger" onclick="confirmDialogClose(true)">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper">
+<div class="root">
+<button id="scrollUpBtn"   onclick="document.getElementById('screen-game').scrollBy({top:-120,behavior:'smooth'})"><i class="ti ti-chevron-up"></i></button>
+<button id="scrollDownBtn" onclick="document.getElementById('screen-game').scrollBy({top:120,behavior:'smooth'})"><i class="ti ti-chevron-down"></i></button>
+
+  <!-- Pentagram background -->
+  <svg id="pentaSvg" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none" viewBox="0 0 900 728" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="pglow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="pglow2" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="11" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <linearGradient id="plineGrad" gradientUnits="userSpaceOnUse" x1="226" y1="174" x2="674" y2="599">
+        <stop offset="0%"   stop-color="#ff5500" stop-opacity="0.9"/>
+        <stop offset="45%"  stop-color="#cc1a1a" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#880010" stop-opacity="0.6"/>
+      </linearGradient>
+    </defs>
+    <circle id="pOuterC"  cx="450" cy="364" r="260" stroke="#cc2200" stroke-width="1.5" fill="none" opacity="0" stroke-dasharray="1634" stroke-dashoffset="1634"/>
+    <circle id="pOuterCG" cx="450" cy="364" r="260" stroke="#ff4400" stroke-width="3"   fill="none" opacity="0" filter="url(#pglow2)" stroke-dasharray="1634" stroke-dashoffset="1634"/>
+    <polygon id="pPentagon" points="450,599 674,437 588,174 312,174 226,437" stroke="#3a0810" stroke-width="0.8" fill="none" opacity="0" stroke-dasharray="1382" stroke-dashoffset="1382"/>
+    <g filter="url(#pglow2)" opacity="0.65">
+      <line id="pgl1" x1="450" y1="599" x2="588" y2="174" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl2" x1="588" y1="174" x2="226" y2="437" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl3" x1="226" y1="437" x2="674" y2="437" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl4" x1="674" y1="437" x2="312" y2="174" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl5" x1="312" y1="174" x2="450" y2="599" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+    </g>
+    <g filter="url(#pglow)" stroke-linecap="round" stroke="url(#plineGrad)" stroke-width="2">
+      <line id="pl1" x1="450" y1="599" x2="588" y2="174" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl2" x1="588" y1="174" x2="226" y2="437" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl3" x1="226" y1="437" x2="674" y2="437" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl4" x1="674" y1="437" x2="312" y2="174" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl5" x1="312" y1="174" x2="450" y2="599" stroke-dasharray="448" stroke-dashoffset="448"/>
+    </g>
+    <g fill="#ff5500" filter="url(#pglow)">
+      <circle id="pd1" cx="450" cy="599" r="5" opacity="0"/>
+      <circle id="pd2" cx="588" cy="174" r="5" opacity="0"/>
+      <circle id="pd3" cx="226" cy="437" r="5" opacity="0"/>
+      <circle id="pd4" cx="674" cy="437" r="5" opacity="0"/>
+      <circle id="pd5" cx="312" cy="174" r="5" opacity="0"/>
+    </g>
+    <g fill="#ff8800" filter="url(#pglow2)" opacity="0.6">
+      <circle id="pdg1" cx="450" cy="599" r="10" opacity="0"/>
+      <circle id="pdg2" cx="588" cy="174" r="10" opacity="0"/>
+      <circle id="pdg3" cx="226" cy="437" r="10" opacity="0"/>
+      <circle id="pdg4" cx="674" cy="437" r="10" opacity="0"/>
+      <circle id="pdg5" cx="312" cy="174" r="10" opacity="0"/>
+    </g>
+    <g id="pEmbers" opacity="0">
+      <circle cx="400" cy="250" r="1.5" fill="#ff6600" opacity="0.5"/>
+      <circle cx="500" cy="230" r="1"   fill="#ffaa00" opacity="0.6"/>
+      <circle cx="360" cy="420" r="1.5" fill="#ff4400" opacity="0.4"/>
+      <circle cx="540" cy="460" r="1"   fill="#ff6600" opacity="0.5"/>
+      <circle cx="340" cy="200" r="2"   fill="#ffcc44" opacity="0.4"/>
+      <circle cx="560" cy="190" r="1.5" fill="#ff8800" opacity="0.5"/>
+      <circle cx="300" cy="500" r="1"   fill="#ff4400" opacity="0.4"/>
+      <circle cx="600" cy="510" r="1.5" fill="#ff6600" opacity="0.4"/>
+      <circle cx="470" cy="570" r="1"   fill="#ffaa00" opacity="0.5"/>
+      <circle cx="420" cy="580" r="1.5" fill="#ff8800" opacity="0.4"/>
+    </g>
+  </svg>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(30,0,15,0.72) 0%,rgba(4,1,8,0.90) 68%);z-index:1;pointer-events:none;border-radius:16px"></div>
+
+  <!-- Player inventory -->
+  <div class="inv-col">
+    <div id="invPanel" style="display:none" class="panel">
+      <div class="inv-char-header">
+        <div id="charAvatarInv" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin:0 auto 3px"></div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-primary)" id="charNameInv"></div>
+        <div style="font-size:10px;color:var(--text-secondary)" id="charClassInv"></div>
+      </div>
+      <div class="panel-title"><i class="ti ti-backpack"></i> Equipment</div>
+      <div id="slot-helmet" class="inv-slot">
+        <div class="slot-label"><i class="ti ti-crown" style="font-size:10px"></i>Helm</div>
+        <div id="slot-helmet-c" class="slot-empty">Empty</div>
+      </div>
+      <div id="slot-amulet" class="inv-slot">
+        <div class="slot-label"><i class="ti ti-circle" style="font-size:10px"></i>Amulet</div>
+        <div id="slot-amulet-c" class="slot-empty">Empty</div>
+      </div>
+      <div id="slot-chest" class="inv-slot">
+        <div class="slot-label"><i class="ti ti-shield" style="font-size:10px"></i>Chest</div>
+        <div id="slot-chest-c" class="slot-empty">Empty</div>
+      </div>
+      <div id="slot-gloves" class="inv-slot">
+        <div class="slot-label"><i class="ti ti-hand-stop" style="font-size:10px"></i>Gloves</div>
+        <div id="slot-gloves-c" class="slot-empty">Empty</div>
+      </div>
+      <div id="slot-boots" class="inv-slot">
+        <div class="slot-label"><i class="ti ti-ripple" style="font-size:10px"></i>Boots</div>
+        <div id="slot-boots-c" class="slot-empty">Empty</div>
+      </div>
+      <div id="slot-charms" class="inv-slot inv-slot-charms">
+        <div class="slot-label"><i class="ti ti-hexagon" style="font-size:10px"></i>Charms</div>
+        <div class="charm-slots">
+          <div id="slot-charm-0" class="charm-sub" data-size="small">
+            <div class="charm-sub-label">Small</div>
+            <div id="slot-charm-0-c" class="slot-empty">Empty</div>
+          </div>
+          <div id="slot-charm-1" class="charm-sub" data-size="large">
+            <div class="charm-sub-label">Large</div>
+            <div id="slot-charm-1-c"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Center content -->
+  <div class="center-col">
+
+    <!-- HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div id="homeContent" style="opacity:0;transition:opacity 0.9s ease">
+      <h1 class="home-title">Battle for the Unweb</h1>
+      <div class="home-hero">
+        <div class="home-actions">
+          <button class="hbtn" onclick="goNewAdventure()">
+            <div class="hbt"><i class="ti ti-wand" style="font-size:14px;margin-right:4px"></i>New adventure</div>
+            <div class="hbd">Create a character and begin your hunt</div>
+          </button>
+          <button class="hbtn disabled" id="loadBtn" onclick="goLoadAdventure()">
+            <div class="hbt"><i class="ti ti-book" style="font-size:14px;margin-right:4px"></i>Load adventure</div>
+            <div class="hbd">Resume your saved progress</div>
+          </button>
+        </div>
+        <div id="savePreview" style="display:none" class="save-preview">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div id="spAvatar" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0"></div>
+            <div>
+              <strong id="spName" style="font-size:13px;font-weight:700;color:var(--text-primary)"></strong>
+              <p id="spClass" style="font-size:11px;color:var(--text-secondary);margin-top:1px"></p>
+            </div>
+          </div>
+          <div class="save-stats">
+            <div class="tiny"><strong id="spXP" style="color:var(--gold);font-weight:700"></strong> XP</div>
+            <div class="tiny"><strong id="spDefeated" style="color:var(--text-primary);font-weight:700"></strong> defeated</div>
+            <div class="tiny"><strong id="spItems" style="color:var(--text-primary);font-weight:700"></strong> items</div>
+            <button id="spDelete" onclick="deleteSave()" style="display:none;margin-left:auto;padding:2px 5px;font-size:13px;color:var(--text-danger);border-color:transparent;background:transparent;line-height:1" title="Delete save"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>
+      </div>
+      </div><!-- /homeContent -->
+    </div>
+
+    <!-- CREATE SCREEN -->
+    <div id="screen-create" class="screen">
+      <div class="creation-wrap">
+        <button onclick="goHome()" style="margin-bottom:1rem;font-size:12px;background:none;border:none;cursor:pointer;padding:0;color:var(--text-secondary)"><i class="ti ti-arrow-left"></i> Back</button>
+        <h2 style="font-size:20px;font-weight:700;margin-bottom:5px;color:var(--gold)">Create your character</h2>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.5">Name your hunter and choose a class. Your class shapes your combat stats.</p>
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:0.05em">Character name</label>
+        <input type="text" id="charNameInput" placeholder="Enter a name..." style="margin-bottom:1.25rem" maxlength="24" />
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:0.05em">Choose your class</label>
+        <div class="class-grid" id="classGrid"></div>
+        <button class="primary" onclick="startAdventure()" style="width:100%;font-size:14px"><i class="ti ti-sword"></i> Begin the hunt ↗</button>
+        <div id="createErr" class="err-box" style="display:none;margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="screen-game" class="screen">
+      <!-- XP bar -->
+      <div class="xp-bar">
+        <div class="xp-avatar" id="xpAvatarEl"></div>
+        <div class="xp-info">
+          <div class="xp-top">
+            <span style="font-size:12px;font-weight:700;color:var(--text-primary)" id="xpRankTxt"></span>
+            <span class="tiny" id="xpCountTxt"></span>
+          </div>
+          <div class="xp-track"><div class="xp-fill" id="xpFillEl" style="width:0%"></div></div>
+          <div class="xp-sub">
+            <span class="tiny" id="xpCurrentTxt"></span>
+            <span class="tiny" id="xpNextTxt"></span>
+          </div>
+        </div>
+        <div class="hunter-lvl">
+          <div class="big" id="hunterLvlEl">1</div>
+          <div class="lbl">Lvl</div>
+        </div>
+      </div>
+
+      <!-- Char bar -->
+      <div class="char-bar">
+        <div class="char-avatar" id="charAvatarEl"></div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--text-primary)" id="charNameEl"></div>
+          <div style="font-size:11px;color:var(--text-secondary)" id="charClassEl"></div>
+        </div>
+        <button onclick="goHome()" style="font-size:12px;padding:5px 9px"><i class="ti ti-home"></i></button>
+      </div>
+
+      <!-- URL input -->
+      <div class="input-row">
+        <input type="text" id="urlInput" placeholder="https://example.com — enter any website to fight" />
+        <button class="primary" onclick="summonMonster()"><i class="ti ti-sword"></i> Fight ↗</button>
+      </div>
+
+      <!-- Starter suggestions -->
+      <div id="starterSuggestions"></div>
+
+      <!-- Loading -->
+      <div id="loading" style="display:none" class="loading-state">
+        <div class="spinner"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)" id="loadingMsg">Entering the Unweb…</div>
+        <div class="tiny" style="margin-top:5px" id="loadingUrl"></div>
+      </div>
+
+      <!-- Error -->
+      <div id="errBox" style="display:none" class="err-box"></div>
+
+      <!-- Monster panel -->
+      <div id="monsterPanel" style="display:none">
+        <div class="monster-card">
+          <div class="monster-top">
+            <div id="monsterIllustration" style="flex-shrink:0"></div>
+            <div class="monster-identity">
+              <div class="level-badge" id="levelBadge">
+                <span class="lbl">LVL</span>
+                <span id="levelNum"></span>
+              </div>
+              <div class="monster-name" id="monsterName"></div>
+              <div class="monster-flavor" id="monsterFlavor"></div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px">
+                <div class="pill" id="scorePill"></div>
+                <div style="font-size:10px;letter-spacing:0.08em;color:var(--text-tertiary);align-self:center;text-transform:uppercase" id="tierClass"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fight arena -->
+        <div class="fight-arena">
+          <div class="arena-bars">
+            <div class="arena-bar-group">
+              <div class="arena-bar-label">
+                <span id="playerHPLabel">You</span>
+                <span id="playerHPVal"></span>
+              </div>
+              <div class="arena-hp-track">
+                <div class="arena-hp-fill" id="playerHPBar" style="background:var(--green)"></div>
+              </div>
+            </div>
+            <div class="arena-bar-group">
+              <div class="arena-bar-label">
+                <span id="monsterHPLabel">Monster</span>
+                <span id="monsterHPVal"></span>
+              </div>
+              <div class="arena-hp-track">
+                <div class="arena-hp-fill" id="monsterHPBar" style="background:var(--ember)"></div>
+              </div>
+            </div>
+          </div>
+          <div class="arena-stats">
+            <div class="arena-stat-card"><div class="arena-stat-val" id="statATK">--</div><div class="arena-stat-lbl">Your ATK</div></div>
+            <div class="arena-stat-card"><div class="arena-stat-val" id="statDEF">--</div><div class="arena-stat-lbl">Your DEF</div></div>
+            <div class="arena-stat-card"><div class="arena-stat-val" id="statMATK">--</div><div class="arena-stat-lbl">Monster ATK</div></div>
+          </div>
+          <div class="combat-log" id="combatLog"></div>
+          <button class="fight-btn primary" id="fightBtn" onclick="doFightRound()"><i class="ti ti-sword"></i> Fight!</button>
+        </div>
+
+      </div>
+
+      <!-- Post-fight -->
+      <div id="postFight" style="display:none">
+        <div class="divider">— victory —</div>
+        <div class="breakdown" id="breakdown"></div>
+        <div id="suggestedLinks"></div>
+      </div>
+
+      <!-- Bestiary -->
+      <div id="bestiary" style="display:none" class="bestiary-section">
+        <div class="bestiary-header">
+          <span><i class="ti ti-book" style="font-size:15px;vertical-align:-2px;margin-right:5px"></i>Battle Record</span>
+          <span class="tiny" id="bestiaryCount"></span>
+        </div>
+        <div id="bestiaryList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Monster loot -->
+  <div class="loot-col">
+    <div id="lootPanel" style="display:none" class="panel">
+      <div class="panel-title"><i class="ti ti-sword"></i> Monster loot</div>
+      <div id="loot-slot-1" class="loot-slot"><div class="loot-empty">Defeat a monster to claim loot</div></div>
+      <div id="loot-slot-2" class="loot-slot"><div class="loot-empty" style="opacity:0.4"></div></div>
+      <div id="loot-slot-3" class="loot-slot locked"><div class="loot-empty"><i class="ti ti-lock" style="font-size:12px;display:block;margin-bottom:3px"></i>Slot 3</div></div>
+      <div id="loot-slot-4" class="loot-slot locked" style="margin-bottom:0"><div class="loot-empty"><i class="ti ti-lock" style="font-size:12px;display:block;margin-bottom:3px"></i>Slot 4</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- Scripts — load order matters: data → tiers → meta → loot → monster → combat → bestiary → main → pentagram -->
+<script src="src/data.js"></script>
+<script src="src/tiers.js"></script>
+<script src="src/meta.js"></script>
+<script src="src/loot.js"></script>
+<script src="src/monster.js"></script>
+<script src="src/combat.js"></script>
+<script src="src/bestiary.js"></script>
+<script src="src/main.js"></script>
+<script src="src/pentagram.js"></script>
+
+</body>
+</html>

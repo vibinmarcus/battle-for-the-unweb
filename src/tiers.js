@@ -1,0 +1,52 @@
+/* ═══════════════════════════════════════════════════════════
+   MONSTER TIERS  (SVG drawings + tier lookup)
+   ═══════════════════════════════════════════════════════════ */
+
+const TIERS = [
+  { min:1,  max:10,  suffix:'the Feeble',     baseXP:50,   color:'#7a7068', bg:'rgba(122,112,104,0.15)', flavor:'…barely stirs from its swamp.',
+    draw:(S,m)=>{ const c=S/2,r=S*0.22,ey=c-S*0.04,ex=S*0.1; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.08}" rx="${r*1.4}" ry="${r*0.9}" fill="#3a3530"/><ellipse cx="${c}" cy="${c}" rx="${r}" ry="${r*0.85}" fill="#4a4540"/><circle cx="${c-ex}" cy="${ey}" r="${S*0.045}" fill="#8a8078"/><circle cx="${c+ex}" cy="${ey}" r="${S*0.045}" fill="#8a8078"/><path d="M${c-S*0.07} ${ey+S*0.1} Q${c} ${ey+S*0.06} ${c+S*0.07} ${ey+S*0.1}" stroke="#8a8078" stroke-width="${m?1:1.5}" stroke-linecap="round"/><ellipse cx="${c-r*1.1}" cy="${c+S*0.12}" rx="${S*0.06}" ry="${S*0.12}" fill="#4a4540"/><ellipse cx="${c+r*1.1}" cy="${c+S*0.12}" rx="${S*0.06}" ry="${S*0.12}" fill="#4a4540"/></svg>`; }
+  },
+  { min:11, max:20,  suffix:'the Timid',      baseXP:100,  color:'#4a8060', bg:'rgba(74,128,96,0.15)',   flavor:'…skitters nervously in the shadows.',
+    draw:(S,m)=>{ const c=S/2,r=S*0.2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.1}" rx="${r*1.1}" ry="${r*0.55}" fill="#1a3025"/><ellipse cx="${c}" cy="${c-S*0.02}" rx="${r}" ry="${r*0.85}" fill="#2a5040"/><circle cx="${c-S*0.09}" cy="${c-S*0.06}" r="${S*0.04}" fill="#6ab090"/><circle cx="${c+S*0.09}" cy="${c-S*0.06}" r="${S*0.04}" fill="#6ab090"/><line x1="${c-r*0.6}" y1="${c-S*0.18}" x2="${c-r*0.9}" y2="${c-S*0.38}" stroke="#2a5040" stroke-width="${m?1:1.5}" stroke-linecap="round"/><line x1="${c+r*0.6}" y1="${c-S*0.18}" x2="${c+r*0.9}" y2="${c-S*0.38}" stroke="#2a5040" stroke-width="${m?1:1.5}" stroke-linecap="round"/><line x1="${c-r*1.1}" y1="${c+S*0.02}" x2="${c-r*1.55}" y2="${c-S*0.1}" stroke="#2a5040" stroke-width="${m?1:1.5}" stroke-linecap="round"/><line x1="${c+r*1.1}" y1="${c+S*0.02}" x2="${c+r*1.55}" y2="${c-S*0.1}" stroke="#2a5040" stroke-width="${m?1:1.5}" stroke-linecap="round"/></svg>`; }
+  },
+  { min:21, max:30,  suffix:'the Wandering',  baseXP:150,  color:'#2a7858', bg:'rgba(42,120,88,0.15)',   flavor:'…roams aimlessly without purpose.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.15}" rx="${S*0.35}" ry="${S*0.16}" fill="#1a3028"/><rect x="${c-S*0.28}" y="${c-S*0.08}" width="${S*0.56}" height="${S*0.35}" rx="${S*0.07}" fill="#1e5040"/><rect x="${c-S*0.18}" y="${c-S*0.22}" width="${S*0.36}" height="${S*0.2}" rx="${S*0.06}" fill="#2a7050"/><circle cx="${c-S*0.07}" cy="${c-S*0.16}" r="${S*0.04}" fill="#5ab898"/><circle cx="${c+S*0.07}" cy="${c-S*0.16}" r="${S*0.04}" fill="#5ab898"/><rect x="${c-S*0.1}" y="${c+S*0.12}" width="${S*0.05}" height="${S*0.18}" rx="${S*0.02}" fill="#1e5040"/><rect x="${c+S*0.05}" y="${c+S*0.12}" width="${S*0.05}" height="${S*0.18}" rx="${S*0.02}" fill="#1e5040"/></svg>`; }
+  },
+  { min:31, max:40,  suffix:'the Lurking',    baseXP:200,  color:'#2a5898', bg:'rgba(42,88,152,0.15)',   flavor:'…hides just out of sight, watching.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.2}" rx="${S*0.38}" ry="${S*0.14}" fill="#102030"/><path d="M${c-S*0.32} ${c+S*0.12} Q${c-S*0.38} ${c-S*0.18} ${c} ${c-S*0.28} Q${c+S*0.38} ${c-S*0.18} ${c+S*0.32} ${c+S*0.12} Z" fill="#1a3878"/><ellipse cx="${c}" cy="${c+S*0.08}" rx="${S*0.28}" ry="${S*0.14}" fill="#2a4868"/><circle cx="${c-S*0.1}" cy="${c+S*0.05}" r="${S*0.055}" fill="#e8f0ff"/><circle cx="${c+S*0.1}" cy="${c+S*0.05}" r="${S*0.055}" fill="#e8f0ff"/><circle cx="${c-S*0.1}" cy="${c+S*0.05}" r="${S*0.03}" fill="#2a5898"/><circle cx="${c+S*0.1}" cy="${c+S*0.05}" r="${S*0.03}" fill="#2a5898"/></svg>`; }
+  },
+  { min:41, max:50,  suffix:'the Restless',   baseXP:250,  color:'#6860c0', bg:'rgba(104,96,192,0.15)',  flavor:'…never quite sleeps, always shifting.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.18}" rx="${S*0.32}" ry="${S*0.12}" fill="#1a1830"/><ellipse cx="${c}" cy="${c}" rx="${S*0.26}" ry="${S*0.3}" fill="#302870"/><ellipse cx="${c}" cy="${c-S*0.06}" rx="${S*0.2}" ry="${S*0.22}" fill="#4840a0"/><circle cx="${c-S*0.09}" cy="${c-S*0.08}" r="${S*0.05}" fill="#c0b8ff"/><circle cx="${c+S*0.09}" cy="${c-S*0.08}" r="${S*0.05}" fill="#c0b8ff"/><path d="M${c-S*0.26} ${c-S*0.1} Q${c-S*0.38} ${c-S*0.28} ${c-S*0.22} ${c-S*0.38}" stroke="#4840a0" stroke-width="${m?1.5:2.5}" fill="none" stroke-linecap="round"/><path d="M${c+S*0.26} ${c-S*0.1} Q${c+S*0.38} ${c-S*0.28} ${c+S*0.22} ${c-S*0.38}" stroke="#4840a0" stroke-width="${m?1.5:2.5}" fill="none" stroke-linecap="round"/></svg>`; }
+  },
+  { min:51, max:60,  suffix:'the Ravenous',   baseXP:300,  color:'#a07010', bg:'rgba(160,112,16,0.15)',  flavor:'…always hungry, consuming everything.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.2}" rx="${S*0.34}" ry="${S*0.1}" fill="#2a1e08"/><ellipse cx="${c}" cy="${c+S*0.04}" rx="${S*0.3}" ry="${S*0.32}" fill="#5a3808"/><ellipse cx="${c}" cy="${c-S*0.08}" rx="${S*0.24}" ry="${S*0.2}" fill="#806020"/><circle cx="${c-S*0.1}" cy="${c-S*0.1}" r="${S*0.06}" fill="#e8a840"/><circle cx="${c+S*0.1}" cy="${c-S*0.1}" r="${S*0.06}" fill="#e8a840"/><path d="M${c-S*0.14} ${c+S*0.08} L${c-S*0.07} ${c+S*0.02} L${c} ${c+S*0.1} L${c+S*0.07} ${c+S*0.02} L${c+S*0.14} ${c+S*0.08}" stroke="#e8a840" stroke-width="${m?1:1.5}" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`; }
+  },
+  { min:61, max:70,  suffix:'the Relentless', baseXP:400,  color:'#c04020', bg:'rgba(192,64,32,0.15)',   flavor:'…cannot be stopped or reasoned with.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.22}" rx="${S*0.35}" ry="${S*0.1}" fill="#200808"/><path d="M${c} ${c-S*0.38} L${c+S*0.08} ${c-S*0.15} L${c+S*0.32} ${c-S*0.2} L${c+S*0.14} ${c+S*0.02} L${c+S*0.28} ${c+S*0.24} L${c} ${c+S*0.12} L${c-S*0.28} ${c+S*0.24} L${c-S*0.14} ${c+S*0.02} L${c-S*0.32} ${c-S*0.2} L${c-S*0.08} ${c-S*0.15} Z" fill="#802010"/><ellipse cx="${c}" cy="${c-S*0.02}" rx="${S*0.16}" ry="${S*0.18}" fill="#c05030"/><circle cx="${c-S*0.07}" cy="${c-S*0.06}" r="${S*0.045}" fill="#ff8060"/><circle cx="${c+S*0.07}" cy="${c-S*0.06}" r="${S*0.045}" fill="#ff8060"/></svg>`; }
+  },
+  { min:71, max:80,  suffix:'the Dreadful',   baseXP:500,  color:'#a02060', bg:'rgba(160,32,96,0.15)',   flavor:'…inspires true fear in all who witness it.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.25}" rx="${S*0.38}" ry="${S*0.1}" fill="#200818"/><path d="M${c-S*0.3} ${c+S*0.18} L${c-S*0.34} ${c-S*0.1} Q${c-S*0.3} ${c-S*0.38} ${c} ${c-S*0.4} Q${c+S*0.3} ${c-S*0.38} ${c+S*0.34} ${c-S*0.1} L${c+S*0.3} ${c+S*0.18} Z" fill="#701040"/><path d="M${c-S*0.3} ${c+S*0.18} L${c-S*0.2} ${c+S*0.04} L${c-S*0.1} ${c+S*0.18} L${c} ${c+S*0.04} L${c+S*0.1} ${c+S*0.18} L${c+S*0.2} ${c+S*0.04} L${c+S*0.3} ${c+S*0.18}" stroke="#a02060" stroke-width="${m?1:2}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="${c}" cy="${c-S*0.05}" rx="${S*0.22}" ry="${S*0.2}" fill="#c04070"/><circle cx="${c-S*0.09}" cy="${c-S*0.1}" r="${S*0.055}" fill="#ff80b0"/><circle cx="${c+S*0.09}" cy="${c-S*0.1}" r="${S*0.055}" fill="#ff80b0"/></svg>`; }
+  },
+  { min:81, max:90,  suffix:'the Wrathful',   baseXP:700,  color:'#4838c0', bg:'rgba(72,56,192,0.15)',   flavor:'…shakes the earth with every movement.',
+    draw:(S,m)=>{ const c=S/2; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none"><ellipse cx="${c}" cy="${c+S*0.28}" rx="${S*0.4}" ry="${S*0.1}" fill="#101030"/><path d="M${c} ${c-S*0.42} L${c+S*0.1} ${c-S*0.22} L${c+S*0.42} ${c-S*0.28} L${c+S*0.24} ${c-S*0.04} L${c+S*0.44} ${c+S*0.18} L${c+S*0.18} ${c+S*0.1} L${c+S*0.22} ${c+S*0.38} L${c} ${c+S*0.22} L${c-S*0.22} ${c+S*0.38} L${c-S*0.18} ${c+S*0.1} L${c-S*0.44} ${c+S*0.18} L${c-S*0.24} ${c-S*0.04} L${c-S*0.42} ${c-S*0.28} L${c-S*0.1} ${c-S*0.22} Z" fill="#2820a0"/><ellipse cx="${c}" cy="${c-S*0.02}" rx="${S*0.18}" ry="${S*0.2}" fill="#6858e0"/><circle cx="${c-S*0.08}" cy="${c-S*0.08}" r="${S*0.06}" fill="#c0b8ff"/><circle cx="${c+S*0.08}" cy="${c-S*0.08}" r="${S*0.06}" fill="#c0b8ff"/></svg>`; }
+  },
+  { min:91, max:100, suffix:'the Boundless',  baseXP:1000, color:'#c8941a', bg:'rgba(200,148,26,0.15)',  flavor:'…exists beyond all mortal comprehension.',
+    draw:(S,m)=>{ const c=S/2,pts=12; let sp=''; for(let i=0;i<pts;i++){const a=(i/pts)*Math.PI*2-Math.PI/2; sp+=`L${c+Math.cos(a)*S*0.28} ${c+Math.sin(a)*S*0.28} L${c+Math.cos(a+Math.PI/pts)*S*0.17} ${c+Math.sin(a+Math.PI/pts)*S*0.17} `;} let rs=''; for(let r=0;r<(m?2:4);r++) rs+=`<circle cx="${c}" cy="${c}" r="${S*(0.32+r*0.07)}" stroke="#c8941a" stroke-width="${m?0.5:1}" fill="none" opacity="${0.5-r*0.1}"/>`; return `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" fill="none">${rs}<path d="M${c} ${c-S*0.17} ${sp}Z" fill="#806010"/><circle cx="${c}" cy="${c}" r="${S*0.16}" fill="#c8941a"/><circle cx="${c-S*0.07}" cy="${c-S*0.04}" r="${S*0.05}" fill="#1a1410"/><circle cx="${c+S*0.07}" cy="${c-S*0.04}" r="${S*0.05}" fill="#1a1410"/><circle cx="${c-S*0.07}" cy="${c-S*0.04}" r="${S*0.025}" fill="#e8d060"/><circle cx="${c+S*0.07}" cy="${c-S*0.04}" r="${S*0.025}" fill="#e8d060"/></svg>`; }
+  },
+];
+
+function getTier(s)        { return TIERS.find(t => s <= t.max) || TIERS[TIERS.length-1]; }
+function getClassById(id)  { return CLASSES.find(c => c.id === id); }
+
+function getHunterRank(xp) {
+  let rank = HUNTER_RANKS[0];
+  for (const r of HUNTER_RANKS) { if (xp >= r.xp) rank = r; else break; }
+  const idx  = HUNTER_RANKS.indexOf(rank);
+  const next = HUNTER_RANKS[idx+1];
+  const pct  = next ? Math.round(((xp - rank.xp) / (next.xp - rank.xp)) * 100) : 100;
+  return { rank, next, pct };
+}
+
+function calcXP(score, tier) {
+  return { base: tier.baseXP, bonus: score * 10, total: tier.baseXP + score * 10 };
+}

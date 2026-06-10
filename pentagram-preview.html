@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Pentagram Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #050208;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .card {
+    position: relative;
+    width: 900px;
+    height: 728px;
+    background: #0e0614;
+    border-radius: 16px;
+    border: 1px solid #2a1020;
+    overflow: hidden;
+  }
+  @keyframes pentaGlow {
+    0%, 100% { opacity: 0.35; }
+    50%       { opacity: 1; }
+  }
+  .pgl-lit { animation: pentaGlow 2.8s ease-in-out infinite; }
+  #replayBtn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(200,80,40,0.15);
+    color: #e8c0c8;
+    border: 1px solid #5a1a3a;
+    border-radius: 6px;
+    padding: 6px 18px;
+    font-size: 12px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  #replayBtn:hover { background: rgba(200,80,40,0.3); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <svg id="pentaSvg" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none" viewBox="0 0 900 728" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="pglow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="pglow2" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="11" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <linearGradient id="plineGrad" gradientUnits="userSpaceOnUse" x1="226" y1="174" x2="674" y2="599">
+        <stop offset="0%"   stop-color="#ff5500" stop-opacity="0.9"/>
+        <stop offset="45%"  stop-color="#cc1a1a" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#880010" stop-opacity="0.6"/>
+      </linearGradient>
+    </defs>
+    <circle id="pOuterC"  cx="450" cy="364" r="260" stroke="#cc2200" stroke-width="1.5" fill="none" opacity="0" stroke-dasharray="1634" stroke-dashoffset="1634"/>
+    <circle id="pOuterCG" cx="450" cy="364" r="260" stroke="#ff4400" stroke-width="3"   fill="none" opacity="0" filter="url(#pglow2)" stroke-dasharray="1634" stroke-dashoffset="1634"/>
+    <polygon id="pPentagon" points="450,599 674,437 588,174 312,174 226,437" stroke="#3a0810" stroke-width="0.8" fill="none" opacity="0" stroke-dasharray="1382" stroke-dashoffset="1382"/>
+    <g filter="url(#pglow2)" opacity="0.65">
+      <line id="pgl1" x1="450" y1="599" x2="588" y2="174" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl2" x1="588" y1="174" x2="226" y2="437" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl3" x1="226" y1="437" x2="674" y2="437" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl4" x1="674" y1="437" x2="312" y2="174" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+      <line id="pgl5" x1="312" y1="174" x2="450" y2="599" stroke="#ff3300" stroke-width="6" opacity="0" stroke-linecap="round"/>
+    </g>
+    <g filter="url(#pglow)" stroke-linecap="round" stroke="url(#plineGrad)" stroke-width="2">
+      <line id="pl1" x1="450" y1="599" x2="588" y2="174" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl2" x1="588" y1="174" x2="226" y2="437" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl3" x1="226" y1="437" x2="674" y2="437" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl4" x1="674" y1="437" x2="312" y2="174" stroke-dasharray="448" stroke-dashoffset="448"/>
+      <line id="pl5" x1="312" y1="174" x2="450" y2="599" stroke-dasharray="448" stroke-dashoffset="448"/>
+    </g>
+    <g fill="#ff5500" filter="url(#pglow)">
+      <circle id="pd1" cx="450" cy="599" r="5" opacity="0"/>
+      <circle id="pd2" cx="588" cy="174" r="5" opacity="0"/>
+      <circle id="pd3" cx="226" cy="437" r="5" opacity="0"/>
+      <circle id="pd4" cx="674" cy="437" r="5" opacity="0"/>
+      <circle id="pd5" cx="312" cy="174" r="5" opacity="0"/>
+    </g>
+    <g fill="#ff8800" filter="url(#pglow2)" opacity="0.6">
+      <circle id="pdg1" cx="450" cy="599" r="10" opacity="0"/>
+      <circle id="pdg2" cx="588" cy="174" r="10" opacity="0"/>
+      <circle id="pdg3" cx="226" cy="437" r="10" opacity="0"/>
+      <circle id="pdg4" cx="674" cy="437" r="10" opacity="0"/>
+      <circle id="pdg5" cx="312" cy="174" r="10" opacity="0"/>
+    </g>
+    <g id="pEmbers" opacity="0">
+      <circle cx="400" cy="250" r="1.5" fill="#ff6600" opacity="0.5"/>
+      <circle cx="500" cy="230" r="1"   fill="#ffaa00" opacity="0.6"/>
+      <circle cx="360" cy="420" r="1.5" fill="#ff4400" opacity="0.4"/>
+      <circle cx="540" cy="460" r="1"   fill="#ff6600" opacity="0.5"/>
+      <circle cx="340" cy="200" r="2"   fill="#ffcc44" opacity="0.4"/>
+      <circle cx="560" cy="190" r="1.5" fill="#ff8800" opacity="0.5"/>
+      <circle cx="300" cy="500" r="1"   fill="#ff4400" opacity="0.4"/>
+      <circle cx="600" cy="510" r="1.5" fill="#ff6600" opacity="0.4"/>
+      <circle cx="470" cy="570" r="1"   fill="#ffaa00" opacity="0.5"/>
+      <circle cx="420" cy="580" r="1.5" fill="#ff8800" opacity="0.4"/>
+    </g>
+  </svg>
+
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(30,0,15,0.72) 0%,rgba(4,1,8,0.90) 68%);z-index:1;pointer-events:none;border-radius:16px"></div>
+  <button id="replayBtn">↺ Replay</button>
+</div>
+
+<script>
+function runPentagram() {
+  // reset
+  ['pl1','pl2','pl3','pl4','pl5'].forEach(id =>
+    document.getElementById(id).setAttribute('stroke-dashoffset', '448'));
+  ['pgl1','pgl2','pgl3','pgl4','pgl5'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('pgl-lit');
+    el.setAttribute('opacity', '0');
+  });
+  ['pd1','pd2','pd3','pd4','pd5','pdg1','pdg2','pdg3','pdg4','pdg5',
+   'pOuterC','pOuterCG','pPentagon','pEmbers'].forEach(id =>
+    document.getElementById(id).setAttribute('opacity', '0'));
+  document.getElementById('pOuterC').setAttribute('stroke-dashoffset',  '1634');
+  document.getElementById('pOuterCG').setAttribute('stroke-dashoffset', '1634');
+  document.getElementById('pPentagon').setAttribute('stroke-dashoffset','1382');
+
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  function animProp(el, prop, from, to, dur, delay, cb) {
+    if (!el) return;
+    setTimeout(() => {
+      const start = performance.now();
+      (function step(now) {
+        const t = Math.min((now - start) / dur, 1);
+        const v = from + (to - from) * ease(t);
+        if (prop === 'opacity') el.setAttribute('opacity', v.toFixed(3));
+        else if (prop === 'stroke-dashoffset') el.setAttribute('stroke-dashoffset', v.toFixed(2));
+        if (t < 1) requestAnimationFrame(step);
+        else if (cb) cb();
+      })(performance.now());
+    }, delay);
+  }
+
+  function fadeIn(el, dur, delay, cb) { animProp(el, 'opacity', 0, 1, dur, delay, cb); }
+
+  function drawLine(lEl, gEl, dEl, dgEl, dashLen, dur, delay, cb) {
+    if (lEl) lEl.setAttribute('stroke-dashoffset', dashLen);
+    animProp(lEl, 'stroke-dashoffset', dashLen, 0, dur, delay, () => {
+      if (gEl) gEl.classList.add('pgl-lit');
+      if (dEl) fadeIn(dEl, 300, 0);
+      if (dgEl) fadeIn(dgEl, 300, 0);
+      if (cb) cb();
+    });
+  }
+
+  function pEl(id) { return document.getElementById(id); }
+  const lineDur = 700, lineGap = 120;
+
+  setTimeout(() => {
+    fadeIn(pEl('pd1'),  250, 0);
+    fadeIn(pEl('pdg1'), 250, 0);
+    drawLine(pEl('pl1'), pEl('pgl1'), pEl('pd2'), pEl('pdg2'), 448, lineDur, 0, () => {
+      drawLine(pEl('pl2'), pEl('pgl2'), pEl('pd3'), pEl('pdg3'), 448, lineDur, lineGap, () => {
+        drawLine(pEl('pl3'), pEl('pgl3'), pEl('pd4'), pEl('pdg4'), 448, lineDur, lineGap, () => {
+          drawLine(pEl('pl4'), pEl('pgl4'), pEl('pd5'), pEl('pdg5'), 448, lineDur, lineGap, () => {
+            drawLine(pEl('pl5'), pEl('pgl5'), null, null, 448, lineDur, lineGap, () => {
+              animProp(pEl('pPentagon'), 'stroke-dashoffset', 1382, 0, 900, 0);
+              fadeIn(pEl('pPentagon'), 600, 0);
+              animProp(pEl('pOuterC'),  'stroke-dashoffset', 1634, 0, 1400, 100);
+              fadeIn(pEl('pOuterC'),    400, 100);
+              animProp(pEl('pOuterCG'), 'stroke-dashoffset', 1634, 0, 1400, 100);
+              fadeIn(pEl('pOuterCG'),   400, 100);
+              setTimeout(() => { fadeIn(pEl('pEmbers'), 800, 400); }, 300);
+            });
+          });
+        });
+      });
+    });
+  }, 400);
+}
+
+runPentagram();
+document.getElementById('replayBtn').addEventListener('click', runPentagram);
+</script>
+</body>
+</html>
