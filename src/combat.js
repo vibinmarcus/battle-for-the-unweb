@@ -211,7 +211,10 @@ function endFight(won) {
     if (f.entry.score >= 25 && gb.goldElite > 0) gold = Math.round(gold * (1 + gb.goldElite / 100));
     gold += Math.round(gb.goldPerRound * f.round);
     gold  = Math.min(Math.round(gold * (1 + gb.goldPct / 100)) + Math.round(gb.goldFlat), 500);
-    if (!already) { save.gold = (save.gold || 0) + gold; }
+    if (!already) {
+      save.gold = (save.gold || 0) + gold;
+      logCombat(`+${gold}g dropped${doubled ? ' (doubled!)' : ''}.`, 'victory');
+    }
     // ─────────────────────────────────────────────────────────
     writeSave();
     renderGold();
@@ -272,6 +275,7 @@ function closeMobFight() {
   if (fightState && fightState.won) {
     var lootCol = document.querySelector('.loot-col');
     if (lootCol) {
+      document.getElementById('lootPanel').style.display = ''; // ensure visible
       lootCol.classList.add('mob-modal');
       document.body.appendChild(lootCol); // escape stacking context
       document.getElementById('mobFightBackdrop').classList.add('active');
