@@ -352,6 +352,23 @@
 <!-- Scripts — load order matters: data → tiers → meta → loot → monster → combat → bestiary → auth → main → pentagram -->
 <script src="src/data.js"></script>
 <script src="src/tiers.js"></script>
+<!-- Equip comparison modal -->
+<div id="equipCompareModal" style="display:none">
+  <div class="ecm-backdrop" onclick="cancelEquip()"></div>
+  <div class="ecm-card">
+    <div class="ecm-title">Equip this item?</div>
+    <div class="ecm-row">
+      <div class="ecm-col" id="ecmCurrent"></div>
+      <div class="ecm-arrow"><i class="ti ti-arrow-right"></i></div>
+      <div class="ecm-col ecm-new" id="ecmNew"></div>
+    </div>
+    <div class="ecm-btns">
+      <button class="ecm-btn-cancel" onclick="cancelEquip()">Cancel</button>
+      <button class="ecm-btn-confirm" id="ecmConfirmBtn" onclick="confirmEquip()">Equip</button>
+    </div>
+  </div>
+</div>
+
 <!-- Leaderboard floating button + card -->
 <button id="lbToggleBtn" onclick="toggleLeaderboard()" title="Hunter Rankings" style="display:none">
   <i class="ti ti-sword"></i>

@@ -497,6 +497,35 @@ button.primary:hover { background: var(--gold-lt); }
 }
 .save-stats { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border-dark); flex-wrap: wrap; }
 
+/* ─── Equip comparison modal ─────────────────────────────── */
+#equipCompareModal { position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center; }
+.ecm-backdrop { position:absolute;inset:0;background:rgba(0,0,0,.7); }
+.ecm-card {
+  position:relative;z-index:1;
+  background:var(--bg-card);border:1px solid var(--border-mid);
+  border-radius:var(--radius-lg);padding:16px;width:300px;
+  box-shadow:0 12px 40px rgba(0,0,0,.8);
+  animation:lb-rise .15s ease;
+}
+.ecm-title { font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:12px;text-align:center; }
+.ecm-row { display:flex;align-items:flex-start;gap:8px;margin-bottom:12px; }
+.ecm-col { flex:1;background:#0a0310;border-radius:var(--radius-md);padding:8px;min-height:70px; }
+.ecm-new { border:1px solid var(--border-mid); }
+.ecm-arrow { padding-top:22px;color:var(--text-tertiary);font-size:14px;flex-shrink:0; }
+.ecm-item-name { font-size:11px;font-weight:600;margin-bottom:2px;line-height:1.3; }
+.ecm-item-meta { font-size:9px;color:var(--text-tertiary);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em; }
+.ecm-item-prop { font-size:10px;color:var(--text-secondary);line-height:1.5; }
+.ecm-empty { font-size:10px;color:var(--text-tertiary);padding-top:4px; }
+.ecm-col-label { font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-tertiary);margin-bottom:5px; }
+.ecm-btns { display:flex;gap:8px; }
+.ecm-btn-cancel, .ecm-btn-confirm {
+  flex:1;padding:7px 0;border-radius:var(--radius-md);
+  font-family:inherit;font-size:11px;letter-spacing:.04em;cursor:pointer;border:1px solid var(--border-mid);
+}
+.ecm-btn-cancel  { background:#1a0820;color:var(--text-secondary); }
+.ecm-btn-confirm { background:#2a0818;border-color:var(--ember);color:var(--gold-lt);font-weight:600; }
+.ecm-btn-confirm:hover { background:#3a0a22; }
+
 /* ─── Leaderboard floating UI ────────────────────────────── */
 #lbToggleBtn {
   position: fixed; bottom: 18px; left: 18px; z-index: 200;

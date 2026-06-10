@@ -289,9 +289,17 @@ async function summonMonster() {
     hide('loading');
 
     const already = save.defeated.includes(url);
-    window._pendingDrops = already
-      ? [null, null]
-      : [generateDrop(parsed.score, metaTokens, parsed.siteTitle), generateDrop(parsed.score, metaTokens, parsed.siteTitle)];
+    // Generate two independent drops. Re-roll slot 2 once if it lands on an
+    // identical item (same slot + name as slot 1) — keeps duplicates rare but
+    // intentionally possible if the re-roll still matches.
+    let _d1, _d2;
+    if (!already) {
+      _d1 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+      _d2 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+      if (_d1 && _d2 && _d1.slot === _d2.slot && _d1.name === _d2.name)
+        _d2 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+    }
+    window._pendingDrops = already ? [null, null] : [_d1, _d2];
     window._claimedLoot  = {};
     window._fightActive  = !already;  // lock equip until monster is beaten
 

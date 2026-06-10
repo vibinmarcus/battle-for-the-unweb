@@ -325,16 +325,50 @@ function renderLootSlot(slotEl, item, idx) {
   slotEl.onmouseleave = hideSlotTip;
 }
 
+let _pendingEquipIdx = null;
+
+function _itemColHtml(item, label) {
+  if (!item) return `<div class="ecm-col-label">${label}</div><div class="ecm-empty">Empty slot</div>`;
+  const rc = item.rc || RC.Normal;
+  return `
+    <div class="ecm-col-label">${label}</div>
+    <div class="ecm-item-name" style="color:${rc.color}">${(item.name||'').split('\n')[0]}</div>
+    <div class="ecm-item-meta">${item.quality||'Normal'}${item.slot?' · '+item.slot:''}</div>
+    ${(item.props||[]).map(p=>`<div class="ecm-item-prop">${p}</div>`).join('')}`;
+}
+
 function equipFromLoot(idx) {
   const item = window._pendingDrops ? window._pendingDrops[idx] : null;
   if (!item || !item.slot) return;
+
+  // Charm level check before showing modal
   if (item.slot === 'charm') {
     const { rank } = getHunterRank(save.playerXP);
     const slotIdx = item.charmSize === 'large' ? 1 : 0;
-    if (slotIdx === 1 && rank.lvl < 10) {
-      showToast('Reach level 10 to unlock the large charm slot!');
-      return;
-    }
+    if (slotIdx === 1 && rank.lvl < 10) { showToast('Reach level 10 to unlock the large charm slot!'); return; }
+  }
+
+  // Find current item in that slot for comparison
+  let current = null;
+  if (item.slot === 'charm') {
+    const slotIdx = item.charmSize === 'large' ? 1 : 0;
+    current = save.equipped.charms?.[slotIdx] || null;
+  } else {
+    current = save.equipped[item.slot] || null;
+  }
+
+  _pendingEquipIdx = idx;
+  document.getElementById('ecmCurrent').innerHTML = _itemColHtml(current, 'Currently Equipped');
+  document.getElementById('ecmNew').innerHTML     = _itemColHtml(item, 'New Drop');
+  document.getElementById('equipCompareModal').style.display = 'flex';
+}
+
+function confirmEquip() {
+  const idx  = _pendingEquipIdx;
+  const item = window._pendingDrops ? window._pendingDrops[idx] : null;
+  if (!item || !item.slot) { cancelEquip(); return; }
+  if (item.slot === 'charm') {
+    const slotIdx = item.charmSize === 'large' ? 1 : 0;
     if (!save.equipped.charms) save.equipped.charms = [null, null];
     save.equipped.charms[slotIdx] = item;
   } else {
@@ -346,6 +380,12 @@ function equipFromLoot(idx) {
   renderInventory();
   renderLootSlot(document.getElementById(`loot-slot-${idx+1}`), item, idx);
   showToast(`${(item.name||'').substring(0,20)} equipped!`);
+  cancelEquip();
+}
+
+function cancelEquip() {
+  _pendingEquipIdx = null;
+  document.getElementById('equipCompareModal').style.display = 'none';
 }
 
 function show(id)  { document.getElementById(id).style.display = ''; }
