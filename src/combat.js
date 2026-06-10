@@ -268,15 +268,13 @@ function closeMobFight() {
   sg.insertBefore(panel, pf);
   document.getElementById('mobFightBackdrop').classList.remove('active');
   document.getElementById('mobFightDismiss').style.display = 'none';
-  // Open loot drawer on victory
+  // Show loot as bottom-sheet on victory
   if (fightState && fightState.won) {
     var lootCol = document.querySelector('.loot-col');
-    var bd = document.getElementById('mobPanelBackdrop');
-    if (lootCol) { lootCol.classList.add('mob-open'); var inv = document.querySelector('.inv-col'); if (inv) inv.classList.remove('mob-open'); }
-    if (bd) bd.classList.add('active');
+    if (lootCol) {
+      lootCol.classList.add('mob-modal');
+      document.body.appendChild(lootCol); // escape stacking context
+      document.getElementById('mobFightBackdrop').classList.add('active');
+    }
   }
-  setTimeout(function() {
-    var pf = document.getElementById('postFight');
-    if (pf) pf.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
 }

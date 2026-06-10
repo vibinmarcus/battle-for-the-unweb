@@ -452,7 +452,17 @@ button.primary:hover { background: var(--gold-lt); }
 .combat-log .victory     { color: var(--gold); font-weight: 700; }
 .combat-log .defeat      { color: var(--text-danger); font-weight: 700; }
 .fight-btn { width: 100%; font-size: 14px; font-weight: 700; padding: 11px 0; letter-spacing: 0.04em; }
-.fight-btn:disabled { opacity: 1; filter: brightness(0.6); }
+.fight-btn:disabled {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
+  cursor: default;
+  opacity: 1;
+  filter: none;
+  pointer-events: none;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
 
 /* ─── Post-fight ─────────────────────────────────────────── */
 .breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
@@ -833,6 +843,26 @@ button.primary:hover { background: var(--gold-lt); }
     overflow-y: auto;
     animation: mob-fight-up 0.3s ease;
   }
+
+  /* Loot as bottom-sheet (same position as monster panel) */
+  .loot-col.mob-modal {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 149;
+    width: auto;
+    background: var(--bg-primary);
+    border-radius: 16px 16px 0 0;
+    border: 0.5px solid var(--border-mid);
+    border-bottom: none;
+    padding: 10px 12px 28px;
+    max-height: 88vh;
+    overflow-y: auto;
+    animation: mob-fight-up 0.3s ease;
+    transform: none !important;
+  }
+
+  /* Hide fight button on mobile when fight ends — Continue button takes over */
+  .fight-btn:disabled { display: none; }
 
   /* Home screen: keep absolute centering, just fill the viewport */
   #screen-home { height: 100svh; overflow: hidden; position: relative; }

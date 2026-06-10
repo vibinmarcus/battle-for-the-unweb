@@ -415,7 +415,7 @@
 <script src="src/pentagram.js"></script>
 
 <div id="mobPanelBackdrop" class="mob-panel-backdrop" onclick="closeMobPanels()"></div>
-<div id="mobFightBackdrop" onclick="return false"></div>
+<div id="mobFightBackdrop" onclick="closeMobLoot()"></div>
 
 <script>
 function toggleMobPanel(which) {
@@ -434,8 +434,23 @@ function toggleMobPanel(which) {
 }
 function closeMobPanels() {
   document.querySelector('.inv-col').classList.remove('mob-open');
-  document.querySelector('.loot-col').classList.remove('mob-open');
+  var loot = document.querySelector('.loot-col');
+  loot.classList.remove('mob-open');
+  // If loot was in bottom-sheet mode, return it to .root
+  if (loot.classList.contains('mob-modal')) {
+    loot.classList.remove('mob-modal');
+    document.querySelector('.root').appendChild(loot);
+    document.getElementById('mobFightBackdrop').classList.remove('active');
+  }
   document.getElementById('mobPanelBackdrop').classList.remove('active');
+}
+function closeMobLoot() {
+  var loot = document.querySelector('.loot-col');
+  if (loot && loot.classList.contains('mob-modal')) {
+    loot.classList.remove('mob-modal');
+    document.querySelector('.root').appendChild(loot);
+    document.getElementById('mobFightBackdrop').classList.remove('active');
+  }
 }
 </script>
 
