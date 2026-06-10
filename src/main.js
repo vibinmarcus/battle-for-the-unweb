@@ -267,7 +267,6 @@ function renderLootSlot(slotEl, item, idx) {
       ${spriteUrl
         ? `<img src="${spriteUrl}" width="36" height="36" style="object-fit:contain;image-rendering:pixelated;background:rgba(0,0,0,0.2);border-radius:4px;padding:2px;flex-shrink:0" alt="" />`
         : `<i class="ti ${item.icon||'ti-sword'}" style="font-size:18px;color:${rc.color};flex-shrink:0"></i>`}
-      <span class="pill" style="background:${rc.bg};color:${rc.color};font-size:9px;border:0.5px solid ${rc.color}40">${item.quality}</span>
     </div>
     ${canEquip
       ? `<button class="loot-equip-btn${already?' claimed':''}" onclick="equipFromLoot(${idx})" ${already?'disabled':''}>${already?'<i class="ti ti-check"></i> Equipped':equipLabel}</button>`
