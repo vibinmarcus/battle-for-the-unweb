@@ -458,8 +458,8 @@ function renderStarterSuggestions() {
   if (!pool.length) { el.innerHTML = ''; return; }
   const picks = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
   el.innerHTML = `
-    <div style="position:relative;display:flex;align-items:center;justify-content:center;margin:6px 0 4px;min-height:24px">
-      <span style="position:absolute;left:0;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.07em;white-space:nowrap">Suggested targets</span>
+    <div style="display:flex;flex-direction:column;align-items:center;margin:6px 0 4px;gap:5px">
+      <span style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.07em;white-space:nowrap">Suggested targets</span>
       <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center">
         ${picks.map(s => `<button onclick="document.getElementById('urlInput').value='${s.url}'" style="font-size:9px;padding:3px 8px;opacity:0.75">${s.url}</button>`).join('')}
       </div>
