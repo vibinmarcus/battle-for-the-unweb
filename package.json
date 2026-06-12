@@ -1,0 +1,9 @@
+{
+  "name": "battle-for-the-unweb",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}

@@ -4,8 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Battle for the Unweb</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-<link rel="stylesheet" href="styles/main.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" /><link rel="stylesheet" href="styles/main.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
@@ -142,20 +141,31 @@
 
     <!-- AUTH SCREEN -->
     <div id="screen-auth" class="screen active">
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:2rem">
-        <h1 class="home-title" style="margin-bottom:2rem">Battle for the Unweb</h1>
-        <div style="max-width:300px;width:100%">
-          <div id="authForm">
-            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:1.25rem;text-align:center;line-height:1.6">Enter your email to receive a magic sign-in link.<br>No password required.</p>
-            <input type="email" id="authEmail" placeholder="you@example.com" style="width:100%;margin-bottom:0.75rem" />
-            <button class="primary" id="authSendBtn" onclick="authSendLink()" style="width:100%"><i class="ti ti-mail"></i> Send magic link</button>
-            <div id="authErr" class="err-box" style="display:none;margin-top:0.75rem"></div>
+      <div style="position:relative;height:100%">
+        <h1 class="home-title" style="position:absolute;top:1rem;left:0;right:0;text-align:center">Battle for the Unweb</h1>
+        <div id="authGrid" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:190px;display:flex;flex-direction:column;gap:0.75rem">
+          <!-- tabs -->
+          <div id="authTabs" style="display:flex;border-bottom:0.5px solid var(--border-dark)">
+            <button id="authTabLogin"    onclick="authSwitchTab('login')"    style="flex:1;background:none;border:none;border-bottom:2px solid var(--gold);color:var(--gold);font-size:13px;padding:6px 0;letter-spacing:0.04em">Login</button>
+            <button id="authTabRegister" onclick="authSwitchTab('register')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-tertiary);font-size:13px;padding:6px 0;letter-spacing:0.04em">Register</button>
           </div>
-          <div id="authSent" style="display:none;text-align:center;padding-top:1rem">
-            <i class="ti ti-mail-check" style="font-size:36px;color:var(--green);display:block;margin-bottom:1rem"></i>
-            <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Check your email</p>
-            <p style="font-size:12px;color:var(--text-secondary);margin-top:0.5rem;line-height:1.6">A magic link has been sent. Click it to enter the Unweb.</p>
+          <!-- username -->
+          <div style="position:relative">
+            <span id="authLabelU" style="position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:13px;white-space:nowrap">u:</span>
+            <input type="text" id="authUsername" autocomplete="username" style="width:100%;box-sizing:border-box;margin:0" />
           </div>
+          <!-- password -->
+          <div id="authPasswordWrap" style="position:relative">
+            <span id="authLabelP" style="position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:13px;white-space:nowrap">p:</span>
+            <input type="password" id="authPassword" autocomplete="current-password" style="width:100%;box-sizing:border-box;padding-right:34px;margin:0" />
+            <button id="authEyeBtn" onclick="authTogglePw()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;color:var(--text-tertiary);font-size:15px;line-height:1" aria-label="Toggle password visibility"><i class="ti ti-eye"></i></button>
+          </div>
+          <!-- error -->
+          <div id="authErr" class="err-box" style="display:none;margin:0"></div>
+          <!-- submit -->
+          <button class="primary" id="authSubmitBtn" onclick="authSubmit()" style="width:100%">Enter the Unweb</button>
+          <!-- footer -->
+          <p style="font-size:10px;font-weight:700;font-family:'Diablo',serif;text-transform:uppercase;letter-spacing:0.08em;color:#a04858;text-align:center;margin:0;text-shadow:0 0 10px #000,0 0 20px #000,0 0 30px #5a1a3a,0 0 50px #5a1a3a;line-height:1.8">No email required.<br>No password reset.<br>Don't forget it.</p>
         </div>
       </div>
     </div>
@@ -448,6 +458,34 @@ function closeMobLoot() {
   }
 }
 </script>
+
+<!-- ── Debug label overlay ─────────────────────────────────────────── -->
+<style>
+  #dbgToggle {
+    position: fixed; bottom: 10px; left: 10px; z-index: 99999;
+    background: #1a0010; border: 1px solid #ff3300; color: #ff3300;
+    font: 700 10px/1 monospace; padding: 4px 8px; border-radius: 4px;
+    cursor: pointer; opacity: 0.7; user-select: none;
+  }
+  #dbgToggle:hover { opacity: 1; }
+  #dbgToggle.active { background: #ff3300; color: #fff; opacity: 1; }
+  body.dbg-on [id] { outline: 1px dashed rgba(255,80,0,0.55) !important; position: relative; }
+  body.dbg-on [id]::before {
+    content: '#' attr(id);
+    position: absolute; top: 0; left: 0; z-index: 99998;
+    background: rgba(20,0,8,0.88); color: #ff6622;
+    font: 600 9px/1 monospace; padding: 1px 4px;
+    border-radius: 0 0 3px 0; pointer-events: none;
+    white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis;
+  }
+</style>
+<button id="dbgToggle" onclick="(function(){
+  var b = document.body, btn = document.getElementById('dbgToggle');
+  b.classList.toggle('dbg-on');
+  btn.classList.toggle('active');
+  btn.textContent = b.classList.contains('dbg-on') ? '⬡ labels ON' : '⬡ labels';
+})()">⬡ labels</button>
+<!-- ───────────────────────────────────────────────────────────────── -->
 
 </body>
 </html>

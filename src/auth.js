@@ -1,9 +1,10 @@
 /* ═══════════════════════════════════════════════════════════
-   AUTH  —  Supabase magic-link + cloud save
+   AUTH  —  username/password via /api/auth + cloud save
    ═══════════════════════════════════════════════════════════ */
 
 const SUPABASE_URL  = 'https://npkbnwwmuhyzlgbqtlgi.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wa2Jud3dtdWh5emxnYnF0bGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDg5MzEsImV4cCI6MjA5NjYyNDkzMX0.vTHoWfzorr19a8PNEw35Hm-jtSmxdS3T9CeoqBshv_4';
+const SESSION_KEY   = 'bftuw_auth';
 
 const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -11,28 +12,54 @@ let _currentUser = null;
 
 function sbUser() { return _currentUser; }
 
-/* Resolve existing session (handles magic-link redirect hash automatically) */
-async function sbInit() {
-  const { data: { session } } = await _sb.auth.getSession();
-  _currentUser = session?.user ?? null;
-  _sb.auth.onAuthStateChange((_event, session) => {
-    _currentUser = session?.user ?? null;
-  });
+/* Load session from localStorage */
+function sbInit() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (raw) _currentUser = JSON.parse(raw);
+  } catch(_) {}
   return _currentUser;
 }
 
-/* Send magic link — returns error or null */
-async function sbSendMagicLink(email) {
-  const { error } = await _sb.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: window.location.origin }
-  });
-  return error;
+/* Register — returns { error } or null */
+async function sbRegister(username, password) {
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'register', username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) return { error: data.error || 'Registration failed' };
+    _currentUser = { id: data.id, username: data.username };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(_currentUser));
+    return null;
+  } catch(_) {
+    return { error: 'Network error. Try again.' };
+  }
 }
 
-async function sbSignOut() {
-  await _sb.auth.signOut();
+/* Login — returns { error } or null */
+async function sbLogin(username, password) {
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'login', username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) return { error: data.error || 'Login failed' };
+    _currentUser = { id: data.id, username: data.username };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(_currentUser));
+    return null;
+  } catch(_) {
+    return { error: 'Network error. Try again.' };
+  }
+}
+
+function sbSignOut() {
   _currentUser = null;
+  localStorage.removeItem(SESSION_KEY);
 }
 
 /* Cloud save read */
@@ -117,7 +144,7 @@ async function sbSetMonster(domain, parsed) {
   } catch(_) {}
 }
 
-/* Name uniqueness check — returns true if name is already taken by another user */
+/* Name uniqueness check */
 async function sbCheckNameTaken(name) {
   try {
     const { data, error } = await _sb
@@ -127,7 +154,6 @@ async function sbCheckNameTaken(name) {
       .limit(1);
     if (error || !data) return false;
     if (data.length === 0) return false;
-    // Allow the current user's own name (e.g. re-creating after delete)
     return data[0].user_id !== (_currentUser?.id ?? null);
   } catch(_) { return false; }
 }

@@ -81,7 +81,7 @@ function generateDrop(score, metaTokens, siteTitle) {
     const w = pickMeta(metaTokens, fb);
     const isSmall = m.name === 'Small Charm';
     // Charm prop pool — 2 random distinct picks
-    const CHARM_GUARANTEED = [
+    const CHARM_GOLD = [
       () => '+' + ri(1,10) + '% Gold Find',
       () => '+' + ri(5,50) + ' Gold Find',
     ];
@@ -91,8 +91,8 @@ function generateDrop(score, metaTokens, siteTitle) {
       () => '+' + ri(5,20) + '% Gold from Elite Kills',
     ];
     const props = isSmall
-      ? [pick(CHARM_GUARANTEED)()]
-      : [pick(CHARM_GUARANTEED)(), pick(CHARM_LARGE_ONLY)()];
+      ? [pick(CHARM_GOLD)()]
+      : [pick(CHARM_GOLD)(), pick(CHARM_LARGE_ONLY)()];
     return { name:m.name+' of '+w, type:'Charm', quality:'Charm', props, icon:'ti-hexagon', slot:'charm', charmSize: isSmall ? 'small' : 'large', rc:RC.Charm };
   }
 

@@ -121,7 +121,7 @@ function refreshLeaderboard() { renderLeaderboard(); }
 function renderHome() {
   const u = sbUser();
   const lbl = document.getElementById('authUserLabel');
-  if (lbl && u) lbl.textContent = u.email;
+  if (lbl && u) lbl.textContent = u.username;
   const lb = document.getElementById('loadBtn');
   const sp = document.getElementById('savePreview');
   if (hasSave()) {
@@ -561,43 +561,78 @@ function hideSlotTip() { _slotTip.style.display = 'none'; }
 
 /* ── Auth UI ──────────────────────────────────────────────── */
 
-async function authSendLink() {
-  const email  = document.getElementById('authEmail').value.trim();
-  const errEl  = document.getElementById('authErr');
-  const btnEl  = document.getElementById('authSendBtn');
-  if (!email) { errEl.textContent = 'Please enter your email.'; errEl.style.display = ''; return; }
+let _authTab = 'login';
+
+function authSwitchTab(tab) {
+  _authTab = tab;
+  const loginBtn    = document.getElementById('authTabLogin');
+  const registerBtn = document.getElementById('authTabRegister');
+  const submitBtn   = document.getElementById('authSubmitBtn');
+  const gold = 'var(--gold)', dim = 'var(--text-tertiary)', none = 'transparent';
+  loginBtn.style.borderBottomColor    = tab === 'login'    ? gold : none;
+  loginBtn.style.color                = tab === 'login'    ? gold : dim;
+  registerBtn.style.borderBottomColor = tab === 'register' ? gold : none;
+  registerBtn.style.color             = tab === 'register' ? gold : dim;
+  submitBtn.textContent = tab === 'login' ? 'Enter the Unweb' : 'Create Account';
+  document.getElementById('authErr').style.display = 'none';
+}
+
+function authTogglePw() {
+  const f = document.getElementById('authPassword');
+  const b = document.getElementById('authEyeBtn');
+  const show = f.type === 'password';
+  f.type = show ? 'text' : 'password';
+  b.innerHTML = show ? '<i class="ti ti-eye-off"></i>' : '<i class="ti ti-eye"></i>';
+}
+
+async function authSubmit() {
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errEl    = document.getElementById('authErr');
+  const btnEl    = document.getElementById('authSubmitBtn');
+
   errEl.style.display = 'none';
-  btnEl.disabled = true;
-  btnEl.textContent = 'Sending…';
-  const error = await sbSendMagicLink(email);
-  if (error) {
-    errEl.textContent = error.message || 'Failed to send link. Try again.';
+  if (!username || !password) {
+    errEl.textContent = 'Please fill in both fields.';
     errEl.style.display = '';
-    btnEl.disabled = false;
-    btnEl.innerHTML = '<i class="ti ti-mail"></i> Send magic link';
-  } else {
-    document.getElementById('authForm').style.display = 'none';
-    document.getElementById('authSent').style.display = '';
+    return;
   }
+
+  btnEl.disabled = true;
+  btnEl.textContent = _authTab === 'login' ? 'Entering…' : 'Creating…';
+
+  const fn    = _authTab === 'login' ? sbLogin : sbRegister;
+  const error = await fn(username, password);
+
+  btnEl.disabled = false;
+  btnEl.textContent = _authTab === 'login' ? 'Enter the Unweb' : 'Create Account';
+
+  if (error) {
+    errEl.textContent = error.error || 'Something went wrong.';
+    errEl.style.display = '';
+    return;
+  }
+
+  await loadSave();
+  showScreen('screen-home');
+  renderHome();
 }
 
 async function signOut() {
-  await sbSignOut();
+  sbSignOut();
   save = { created:false, charName:'', classId:'', playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
   document.getElementById('invPanel').style.display  = 'none';
   document.getElementById('lootPanel').style.display = 'none';
-  document.getElementById('authForm').style.display  = '';
-  document.getElementById('authSent').style.display  = 'none';
-  document.getElementById('authEmail').value         = '';
-  document.getElementById('authSendBtn').disabled    = false;
-  document.getElementById('authSendBtn').innerHTML   = '<i class="ti ti-mail"></i> Send magic link';
+  document.getElementById('authUsername').value      = '';
+  document.getElementById('authPassword').value      = '';
+  document.getElementById('authErr').style.display   = 'none';
   showScreen('screen-auth');
 }
 
 /* ── Boot ─────────────────────────────────────────────────── */
 
 (async () => {
-  const user = await sbInit();
+  const user = sbInit();
   if (!user) {
     showScreen('screen-auth');
     return;
@@ -608,7 +643,7 @@ async function signOut() {
 })();
 
 document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') summonMonster(); });
-document.getElementById('authEmail').addEventListener('keydown', e => { if (e.key === 'Enter') authSendLink(); });
+document.getElementById('authPassword').addEventListener('keydown', e => { if (e.key === 'Enter') authSubmit(); });
 
 // Close leaderboard card when clicking outside
 document.addEventListener('click', e => {
