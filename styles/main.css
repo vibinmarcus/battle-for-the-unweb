@@ -178,13 +178,15 @@ button {
   border: 0.5px solid var(--border-mid);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
-  font-family: var(--font-sans);
+  font-family: 'Diablo', var(--font-sans);
+  letter-spacing: 0.04em;
   font-size: 12px;
   padding: 7px 14px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 button:hover { background: var(--bg-secondary); border-color: var(--gold); color: var(--text-primary); }
+#starterSuggestions button, #suggestedLinks button { font-family: var(--font-sans); letter-spacing: normal; }
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 button.primary {
   background: var(--gold);
