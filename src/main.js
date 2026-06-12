@@ -122,10 +122,8 @@ function renderHome() {
   const u = sbUser();
   const lbl = document.getElementById('authUserLabel');
   if (lbl && u) lbl.textContent = u.username;
-  const lb = document.getElementById('loadBtn');
   const sp = document.getElementById('savePreview');
   if (hasSave()) {
-    lb.classList.remove('disabled');
     sp.style.display = '';
     const cls    = getClassById(save.classId);
     const {rank} = getHunterRank(save.playerXP);
