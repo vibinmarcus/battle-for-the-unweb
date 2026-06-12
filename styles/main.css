@@ -186,7 +186,7 @@ button {
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 button:hover { background: var(--bg-secondary); border-color: var(--gold); color: var(--text-primary); }
-#starterSuggestions button, #suggestedLinks button { font-family: var(--font-sans); letter-spacing: normal; }
+#starterSuggestions button, #suggestedLinks button, #authSubmitBtn { font-family: var(--font-sans); letter-spacing: normal; }
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 button.primary {
   background: var(--gold);
