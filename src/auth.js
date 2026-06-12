@@ -30,7 +30,7 @@ async function sbRegister(username, password) {
       body: JSON.stringify({ action: 'register', username, password })
     });
     const data = await res.json();
-    if (!res.ok) return { error: [data.error, data.detail, data.code].filter(Boolean).join(' — ') || 'Registration failed' };
+    if (!res.ok) return { error: data.error || 'Registration failed' };
     _currentUser = { id: data.id, username: data.username };
     localStorage.setItem(SESSION_KEY, JSON.stringify(_currentUser));
     return null;
