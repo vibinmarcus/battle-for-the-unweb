@@ -446,10 +446,14 @@ function closeMobPanels() {
 function closeMobLoot() {
   var lp = document.getElementById('lootPanel');
   if (lp && lp.classList.contains('mob-modal')) {
-    lp.classList.remove('mob-modal');
-    lp.style.display = 'none';
-    document.querySelector('.loot-col').appendChild(lp); // return to drawer
+    lp.style.animation = 'mob-fight-down 0.3s ease forwards';
     document.getElementById('mobFightBackdrop').classList.remove('active');
+    setTimeout(function() {
+      lp.style.animation = '';
+      lp.classList.remove('mob-modal');
+      lp.style.display = 'none';
+      document.querySelector('.loot-col').appendChild(lp);
+    }, 300);
   }
 }
 </script>

@@ -764,6 +764,10 @@ button.primary:hover { background: var(--gold-lt); }
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
+@keyframes mob-fight-down {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
 
 /* ─── Mobile-only elements (hidden on desktop) ───────────── */
 .mob-panel-toggles { display: none; }

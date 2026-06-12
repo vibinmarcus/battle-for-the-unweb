@@ -276,8 +276,9 @@ function closeMobFight() {
     var lootPanel = document.getElementById('lootPanel');
     if (lootPanel) {
       lootPanel.style.display = '';
-      lootPanel.classList.add('mob-modal');
       document.body.appendChild(lootPanel); // escape stacking context
+      lootPanel.offsetHeight; // force reflow so animation triggers
+      lootPanel.classList.add('mob-modal');
       document.getElementById('mobFightBackdrop').classList.add('active');
     }
   }
