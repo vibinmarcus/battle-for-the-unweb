@@ -551,7 +551,9 @@ button.primary:hover { background: var(--gold-lt); }
   padding: 1rem;
   position: relative;
   border: 0.5px solid var(--border-light);
+  cursor: pointer;
 }
+.save-preview:hover { border-color: var(--border-mid); }
 .save-stats { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border-dark); flex-wrap: wrap; align-items: center; }
 
 /* ─── Equip comparison modal ─────────────────────────────── */
