@@ -1,3 +1,6 @@
+const MAX_SLOTS = 2;
+let saves      = [null, null];
+let activeSlot = 0;
 let save = {
   created: false,
   charName: '',
@@ -9,32 +12,54 @@ let save = {
   equipped: { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] }
 };
 
+function _blankSave() {
+  return { created:false, charName:'', classId:'', playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
+}
+
 async function loadSave() {
   // Try cloud first
   const cloud = await sbLoadSave();
-  if (cloud && cloud.created) {
-    save = cloud;
-    _patchSave();
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(_) {}
+  if (cloud) {
+    if (cloud.slots) {
+      // New multi-save format
+      saves      = cloud.slots.slice(0, MAX_SLOTS);
+      while (saves.length < MAX_SLOTS) saves.push(null);
+      activeSlot = cloud.active || 0;
+    } else if (cloud.created) {
+      // Migrate old single-save
+      saves = [cloud, null];
+      activeSlot = 0;
+    }
+    saves.forEach(s => s && _patchSaveObj(s));
+    save = saves[activeSlot] || _blankSave();
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify({ slots: saves, active: activeSlot })); } catch(_) {}
     return;
   }
-  // Fall back to localStorage — migrate to cloud if found
+  // Fall back to localStorage
   try {
-    const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if (s && s.created) {
-      save = s;
-      _patchSave();
-      sbWriteSave(save); // migrate
+    const raw = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (raw) {
+      if (raw.slots) {
+        saves      = raw.slots.slice(0, MAX_SLOTS);
+        while (saves.length < MAX_SLOTS) saves.push(null);
+        activeSlot = raw.active || 0;
+      } else if (raw.created) {
+        saves = [raw, null];
+        activeSlot = 0;
+      }
+      saves.forEach(s => s && _patchSaveObj(s));
+      save = saves[activeSlot] || _blankSave();
+      sbWriteSave({ slots: saves, active: activeSlot }); // migrate to cloud
     }
   } catch(_) {}
 }
 
-function _patchSave() {
-  if (!save.equipped) save.equipped = { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] };
-  if (!save.equipped.charms) save.equipped.charms = [null, null];
-  if (!save.domainLinks) save.domainLinks = {};
-  if (!save.bestScore)   save.bestScore   = 0;
-  if (!save.gold)        save.gold        = 0;
+function _patchSaveObj(s) {
+  if (!s.equipped) s.equipped = { helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] };
+  if (!s.equipped.charms) s.equipped.charms = [null, null];
+  if (!s.domainLinks) s.domainLinks = {};
+  if (!s.bestScore)   s.bestScore   = 0;
+  if (!s.gold)        s.gold        = 0;
 }
 
 function renderGold() {
@@ -47,13 +72,18 @@ function renderGold() {
 
 let _saveTimer = null;
 function writeSave() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(_) {}
-  // Debounce cloud writes — batch rapid changes into one request
+  saves[activeSlot] = save;
+  const payload = { slots: saves, active: activeSlot };
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(payload)); } catch(_) {}
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(() => sbWriteSave(save), 2000);
+  _saveTimer = setTimeout(() => sbWriteSave(payload), 2000);
 }
 
-function hasSave() { return save.created; }
+function hasSave(idx) {
+  const s = idx !== undefined ? saves[idx] : save;
+  return !!(s && s.created);
+}
+function filledSlots() { return saves.filter(s => s && s.created).length; }
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -70,10 +100,19 @@ function goHome() {
   renderHome();
 }
 
-function goNewAdventure() { showScreen('screen-create'); renderClassGrid(); }
+function goNewAdventure() {
+  const idx = saves.findIndex(s => !s || !s.created);
+  if (idx === -1) return; // all slots full
+  activeSlot = idx;
+  save = _blankSave();
+  showScreen('screen-create');
+  renderClassGrid();
+}
 
-function goLoadAdventure() {
+function goLoadAdventure(idx) {
+  if (idx !== undefined) activeSlot = idx;
   if (!hasSave()) return;
+  save = saves[activeSlot];
   document.getElementById('invPanel').style.display  = '';
   document.getElementById('lootPanel').style.display = '';
   showScreen('screen-game');
@@ -122,28 +161,39 @@ function renderHome() {
   const u = sbUser();
   const lbl = document.getElementById('authUserLabel');
   if (lbl && u) lbl.textContent = u.username;
-  const sp = document.getElementById('savePreview');
-  if (hasSave()) {
-    sp.style.display = '';
-    const cls    = getClassById(save.classId);
-    const {rank} = getHunterRank(save.playerXP);
-    const av     = document.getElementById('spAvatar');
-    av.textContent = cls ? cls.avatar : '?';
-    av.style.cssText = `width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;background:${cls?cls.bg:'rgba(100,100,100,0.2)'};color:${cls?cls.color:'#aaa'}`;
-    document.getElementById('spName').textContent     = save.charName;
-    const spCls = document.getElementById('spClass');
-    spCls.textContent = (cls ? cls.name : '') + ' · ' + rank.name;
-    if (cls?.special) { spCls.title = '✦ ' + cls.special; spCls.style.cursor = 'help'; }
-    document.getElementById('spXP').textContent       = save.playerXP.toLocaleString();
-    document.getElementById('spDefeated').textContent = save.defeated.length;
-    document.getElementById('spItems').textContent    = save.equipment.length;
-    document.getElementById('spDelete').style.display = '';
-  } else {
-    lb.classList.add('disabled');
-    sp.style.display = 'none';
-    document.getElementById('spDelete').style.display = 'none';
+
+  const container = document.getElementById('savesContainer');
+  if (container) {
+    container.innerHTML = saves.map((s, idx) => {
+      if (!s || !s.created) return '';
+      const cls    = getClassById(s.classId);
+      const {rank} = getHunterRank(s.playerXP);
+      const avatarStyle = `width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;background:${cls?cls.bg:'rgba(100,100,100,0.2)'};color:${cls?cls.color:'#aaa'}`;
+      return `<div class="save-preview" onclick="goLoadAdventure(${idx})">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="${avatarStyle}">${cls ? cls.avatar : '?'}</div>
+          <div>
+            <strong style="font-size:13px;font-weight:700;color:var(--text-primary)">${s.charName}</strong>
+            <p style="font-size:11px;color:var(--text-secondary);margin-top:1px">${(cls ? cls.name : '')} · ${rank.name}</p>
+          </div>
+        </div>
+        <div class="save-stats">
+          <div class="tiny"><strong style="color:var(--gold);font-weight:700">${s.playerXP.toLocaleString()}</strong> XP</div>
+          <div class="tiny"><strong style="color:var(--text-primary);font-weight:700">${s.defeated.length}</strong> defeated</div>
+          <div class="tiny"><strong style="color:var(--text-primary);font-weight:700">${s.equipment.length}</strong> items</div>
+          <button onclick="event.stopPropagation();activeSlot=${idx};save=saves[${idx}];deleteSave()" style="display:flex;margin-left:auto;padding:2px 5px;font-size:13px;color:var(--text-danger);border-color:transparent;background:transparent;line-height:1" title="Delete save"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>`;
+    }).join('');
   }
-  // Show the leaderboard toggle button when logged in
+
+  const newBtn = document.getElementById('newAdventureBtn');
+  if (newBtn) {
+    const full = filledSlots() >= MAX_SLOTS;
+    newBtn.disabled = full;
+    newBtn.classList.toggle('disabled', full);
+  }
+
   const lbBtn = document.getElementById('lbToggleBtn');
   if (lbBtn && sbUser()) lbBtn.style.display = 'flex';
 }
@@ -211,6 +261,7 @@ async function startAdventure() {
   if (taken) { errEl.textContent = 'That name is already taken. Choose another.'; return; }
   errEl.style.display = 'none';
   save = { created:true, charName:name, classId:selectedClass, playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
+  saves[activeSlot] = save;
   writeSave();
   document.getElementById('invPanel').style.display  = '';
   document.getElementById('lootPanel').style.display = '';
@@ -530,9 +581,12 @@ function deleteSave() {
 function confirmDialogClose(confirmed) {
   document.getElementById('confirmDialog').style.display = 'none';
   if (!confirmed) return;
-  localStorage.removeItem(SAVE_KEY);
-  sbDeleteSave();
-  save = { created:false, charName:'', classId:'', playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
+  saves[activeSlot] = null;
+  save = _blankSave();
+  const payload = { slots: saves, active: activeSlot };
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(payload)); } catch(_) {}
+  sbWriteSave(payload);
+  showScreen('screen-home');
   renderHome();
 }
 
@@ -620,7 +674,9 @@ async function authSubmit() {
 
 async function signOut() {
   sbSignOut();
-  save = { created:false, charName:'', classId:'', playerXP:0, bestiary:[], defeated:[], equipment:[], equipped:{ helmet:null, amulet:null, chest:null, gloves:null, boots:null, charms:[null,null] } };
+  saves = [null, null];
+  activeSlot = 0;
+  save = _blankSave();
   document.getElementById('invPanel').style.display  = 'none';
   document.getElementById('lootPanel').style.display = 'none';
   document.getElementById('authUsername').value      = '';

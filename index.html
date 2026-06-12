@@ -180,25 +180,11 @@
       <h1 class="home-title">Battle for the Unweb</h1>
       <div class="home-hero">
         <div class="home-actions">
-          <button class="hbtn" onclick="goNewAdventure()">
-            <div class="hbt"><i class="ti ti-wand" style="font-size:14px;margin-right:4px"></i>New adventure</div>
+          <button id="newAdventureBtn" class="hbtn" onclick="goNewAdventure()">
+            <div class="hbt"><i class="ti ti-wand" style="font-size:14px;margin-right:4px"></i>Create Character</div>
           </button>
         </div>
-        <div id="savePreview" style="display:none" class="save-preview" onclick="goLoadAdventure()">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div id="spAvatar" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0"></div>
-            <div>
-              <strong id="spName" style="font-size:13px;font-weight:700;color:var(--text-primary)"></strong>
-              <p id="spClass" style="font-size:11px;color:var(--text-secondary);margin-top:1px"></p>
-            </div>
-          </div>
-          <div class="save-stats">
-            <div class="tiny"><strong id="spXP" style="color:var(--gold);font-weight:700"></strong> XP</div>
-            <div class="tiny"><strong id="spDefeated" style="color:var(--text-primary);font-weight:700"></strong> defeated</div>
-            <div class="tiny"><strong id="spItems" style="color:var(--text-primary);font-weight:700"></strong> items</div>
-            <button id="spDelete" onclick="event.stopPropagation();deleteSave()" style="display:none;margin-left:auto;padding:2px 5px;font-size:13px;color:var(--text-danger);border-color:transparent;background:transparent;line-height:1" title="Delete save"><i class="ti ti-trash"></i></button>
-          </div>
-        </div>
+        <div id="savesContainer"></div>
       </div>
       </div><!-- /homeContent -->
     </div>

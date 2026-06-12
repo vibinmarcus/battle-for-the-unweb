@@ -532,7 +532,7 @@ button.primary:hover { background: var(--gold-lt); }
   padding: 0 0.5rem; text-align: center;
 }
 .home-hero p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 320px; margin: 0 auto 1.75rem; }
-.home-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 340px; margin: 0 auto; }
+.home-actions { display: flex; justify-content: center; gap: 10px; max-width: 340px; margin: 0 auto; }
 .hbtn {
   padding: 1rem; border-radius: var(--radius-lg);
   border: 0.5px solid var(--border-light);
@@ -544,8 +544,9 @@ button.primary:hover { background: var(--gold-lt); }
 .hbtn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 .hbt { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
 .hbd { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+#savesContainer { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
 .save-preview {
-  max-width: 340px; margin: 1.25rem auto 0;
+  width: 260px; max-width: calc(100vw - 2rem); margin: 0 auto;
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   padding: 1rem;
