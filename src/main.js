@@ -573,7 +573,7 @@ function authSwitchTab(tab) {
   loginBtn.style.color                = tab === 'login'    ? gold : dim;
   registerBtn.style.borderBottomColor = tab === 'register' ? gold : none;
   registerBtn.style.color             = tab === 'register' ? gold : dim;
-  submitBtn.textContent = tab === 'login' ? 'Enter the Unweb' : 'Create Account';
+  submitBtn.textContent = tab === 'login' ? 'Login' : 'Create Account';
   document.getElementById('authErr').style.display = 'none';
 }
 
@@ -605,7 +605,7 @@ async function authSubmit() {
   const error = await fn(username, password);
 
   btnEl.disabled = false;
-  btnEl.textContent = _authTab === 'login' ? 'Enter the Unweb' : 'Create Account';
+  btnEl.textContent = _authTab === 'login' ? 'Login' : 'Create Account';
 
   if (error) {
     errEl.textContent = error.error || 'Something went wrong.';
