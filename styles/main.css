@@ -882,7 +882,8 @@ button.primary:hover { background: var(--gold-lt); }
   .save-preview { max-width: calc(100vw - 2rem); }
 
   /* Other screens: allow natural auto height */
-  #screen-auth, #screen-create, #screen-game { height: auto; overflow: visible; }
+  #screen-auth { height: 100svh; overflow: visible; }
+  #screen-create, #screen-game { height: auto; overflow: visible; }
 
   /* Create screen */
   .creation-wrap { padding: 1rem 0 2rem; }
