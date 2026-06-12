@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       .insert({ username: u, password_hash: hash })
       .select('id, username')
       .single();
-    if (error) return res.status(500).json({ error: 'Registration failed' });
+    if (error) return res.status(500).json({ error: 'Registration failed', detail: error.message, code: error.code });
     return res.status(200).json({ id: data.id, username: data.username });
   }
 
