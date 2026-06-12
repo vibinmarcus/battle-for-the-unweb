@@ -151,8 +151,10 @@ function renderHome() {
 function renderClassGrid() {
   document.getElementById('classGrid').innerHTML = CLASSES.map(c => `
     <div class="class-card" id="cc-${c.id}" onclick="selectClass('${c.id}')">
-      <span class="cc-icon"><i class="ti ${c.icon}"></i></span>
-      <div class="cc-name">${c.name}</div>
+      <div class="cc-name-row">
+        <div class="cc-name">${c.name}</div>
+        <span class="cc-icon"><i class="ti ${c.icon}"></i></span>
+      </div>
       <div class="cc-desc">${c.desc}</div>
       <div class="cc-special"><i class="ti ti-sparkles" style="font-size:9px;margin-right:3px"></i>${c.special}</div>
     </div>
