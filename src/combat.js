@@ -213,7 +213,7 @@ function endFight(won) {
     gold  = Math.min(Math.round(gold * (1 + gb.goldPct / 100)) + Math.round(gb.goldFlat), 500);
     if (!already) {
       save.gold = (save.gold || 0) + gold;
-      logCombat(`+${gold}g dropped${doubled ? ' (doubled!)' : ''}.`, 'victory');
+      logCombat(`${f.entry.monsterName} dropped ${gold} gold pieces${doubled ? ' (doubled!)' : ''}.`, 'victory');
     }
     // ─────────────────────────────────────────────────────────
     writeSave();
