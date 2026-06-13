@@ -139,7 +139,11 @@ function analyzeHtml(rawHtml, url) {
 }
 
 async function fetchFavicon(url, rawHtml) {
-  const origin = (() => { try { const u = new URL(url); return u.origin; } catch(_) { return ''; } })();
+  // For Wayback URLs extract the real domain for favicon resolution
+  const waybackM = url.match(/web\.archive\.org\/web\/(\d+)\/(https?:\/\/)?([^/]+)/);
+  const realDomain = waybackM ? waybackM[3] : null;
+
+  const origin = (() => { try { const u = new URL(url.startsWith('http') ? url : 'https://' + url); return u.origin; } catch(_) { return ''; } })();
   if (!origin) return null;
 
   const tryOne = (src) => new Promise((res, rej) => {
@@ -176,7 +180,13 @@ async function fetchFavicon(url, rawHtml) {
     }
   }
 
-  const fallbacks = [
+  const fallbacks = realDomain ? [
+    // Wayback-served favicon for the archived domain
+    `https://web.archive.org/web/${waybackM[1]}/${realDomain}/favicon.ico`,
+    `https://web.archive.org/web/${waybackM[1]}/${realDomain}/favicon.png`,
+    // Google favicon using real domain (not web.archive.org)
+    `https://www.google.com/s2/favicons?domain=${encodeURIComponent(realDomain)}&sz=128`,
+  ] : [
     origin + '/apple-touch-icon.png',
     origin + '/apple-touch-icon-precomposed.png',
     origin + '/favicon.ico',

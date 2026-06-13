@@ -462,6 +462,7 @@ button.primary:hover { background: var(--gold-lt); }
 .combat-log .gold-drop   { color: #e8a020; font-weight: 700; }
 .combat-log .defeat      { color: var(--text-danger); font-weight: 700; }
 .fight-btn { width: 100%; font-size: 14px; font-weight: 700; padding: 11px 0; letter-spacing: 0.04em; }
+#newAdventureBtn { padding: 7px 0; }
 .fight-btn:disabled {
   background: transparent;
   border-color: transparent;
