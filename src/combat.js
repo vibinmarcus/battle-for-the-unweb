@@ -71,7 +71,7 @@ function initFight(entry) {
   const playerMaxHP  = 100 + rank.lvl * 5 + eq.hpBonus;
   const baseATK      = Math.round(10 + rank.lvl * 2 + cls.atkBonus + (entry.htmlDepth||50) * 0.1 + eq.atkBonus);
   const playerATK    = Math.round(baseATK * (1 + eq.atkPct / 100));
-  const playerDEF    = Math.round(5  + rank.lvl     + cls.defBonus + (entry.cssComplexity||50) * 0.05 + eq.defBonus);
+  const playerDEF    = Math.round((5  + rank.lvl     + cls.defBonus + (entry.cssComplexity||50) * 0.05 + eq.defBonus) * 0.7);
   const monsterMaxHP = Math.round((50 + entry.score * 3) * 0.7);
   const monsterATK   = Math.round((5  + entry.score * 0.8  + (entry.jsWeight||50) * 0.15) * 0.7);
   const monsterDEF   = Math.round((2  + entry.score * 0.3  + (entry.contentDensity||50) * 0.05) * 0.7);

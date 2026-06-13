@@ -1,5 +1,13 @@
 const LINK_NOISE = /ad(s|sby|system|server|nxs|srvr)?[.\-]|doubleclick|googlesyndication|google-analytics|googletagmanager|googletagservices|amazon-ads|adsystem|adnxs|pubmatic|rubiconproject|openx|criteo|taboola|outbrain|sharethrough|moatads|scorecardresearch|chartbeat|newrelic|jsdelivr|cloudflare\.com|akamai|fastly|cdn\.|\.cdn\.|assets\.|static\.|media\.|img\.|images\.|fonts\.|gravatar|wp-content|wp-includes/i;
 
+function stripWayback(html) {
+  html = html.replace(/<!-- BEGIN WAYBACK TOOLBAR INSERT -->[\s\S]*?<!-- END WAYBACK TOOLBAR INSERT -->/gi, '');
+  html = html.replace(/<script[^>]*web-static\.archive\.org[^>]*>[\s\S]*?<\/script>/gi, '');
+  html = html.replace(/<script[^>]*archive\.org[^>]*><\/script>/gi, '');
+  html = html.replace(/<!--\s*FILE ARCHIVED[\s\S]*?-->/gi, '');
+  return html;
+}
+
 function scrapeLinks(html, sourceUrl, limit = 7) {
   const sourceHost = new URL(sourceUrl).hostname.replace(/^www\./, '');
   const re = /<a\s[^>]*href=["'](https?:\/\/[^"'\s>]+)["']/gi;
@@ -238,7 +246,10 @@ async function summonMonster() {
         document.getElementById('loadingMsg').textContent = 'Summoning Site…';
         try {
           const r = await fetch(PROXY + encodeURIComponent(url));
-          if (r.ok) html = await r.text();
+          if (r.ok) {
+            html = await r.text();
+            if (url.includes('web.archive.org')) html = stripWayback(html);
+          }
         } catch(_) {}
       } else {
         document.getElementById('loadingMsg').textContent = 'Monster found in bestiary…';
