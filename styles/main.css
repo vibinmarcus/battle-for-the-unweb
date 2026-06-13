@@ -610,7 +610,7 @@ button.primary:hover { background: var(--gold-lt); }
 #leaderboardCard {
   position: fixed; bottom: 66px; left: 18px; z-index: 199;
   width: 340px;
-  background: var(--bg-card);
+  background: #0e0614;
   border: 1px solid var(--border-mid);
   border-radius: var(--radius-lg);
   overflow: hidden;
