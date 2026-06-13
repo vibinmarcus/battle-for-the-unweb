@@ -180,7 +180,7 @@ function renderHome() {
         <div class="save-stats">
           <div class="tiny"><strong style="color:var(--gold);font-weight:700">${s.playerXP.toLocaleString()}</strong> XP</div>
           <div class="tiny"><strong style="color:var(--text-primary);font-weight:700">${s.defeated.length}</strong> defeated</div>
-          <div class="tiny"><strong style="color:var(--text-primary);font-weight:700">${s.equipment.length}</strong> items</div>
+          <div class="tiny"><strong style="color:var(--text-primary);font-weight:700">${Object.values(s.equipped||{}).flat().filter(Boolean).length}</strong> equipped</div>
           <button onclick="event.stopPropagation();activeSlot=${idx};save=saves[${idx}];deleteSave()" style="display:flex;margin-left:auto;padding:2px 5px;font-size:13px;color:var(--text-danger);border-color:transparent;background:transparent;line-height:1" title="Delete save"><i class="ti ti-trash"></i></button>
         </div>
       </div>`;

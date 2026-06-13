@@ -190,7 +190,6 @@ function endFight(won) {
     save.playerXP += awarded;
     if (!already) {
       save.defeated.push(f.entry.url);
-      (window._pendingDrops || []).filter(Boolean).forEach(d => save.equipment.push(d));
     }
     // Track best monster score ever beaten
     if (!save.bestScore || f.entry.score > save.bestScore) save.bestScore = f.entry.score;
