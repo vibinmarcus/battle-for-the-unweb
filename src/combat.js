@@ -17,15 +17,15 @@ function calcEquipmentBonuses() {
     for (const prop of item.props) {
       const s   = prop.toLowerCase();
       const num = parseInt((prop.match(/\d+/) || ['0'])[0]);
-      if (s.includes('atk rating'))                              atkBonus += Math.round(num * 0.3);
+      if (s.includes('atk rating'))                              atkBonus += Math.round(num * 0.165);
       if (s.includes('defense') && !s.includes('deadly'))       defBonus += num;
       if (s.includes('strength'))                                { atkBonus += Math.round(num * 0.2); defBonus += Math.round(num * 0.1); }
       if (s.includes('life') && !s.includes('stolen') && !s.includes('mana') && !s.includes('per level')) hpBonus += num;
-      if (s.includes('enh') && (s.includes('dmg') || s.includes('damage'))) atkPct += num;
+      if (s.includes('enh') && (s.includes('dmg') || s.includes('damage'))) atkPct += num * 0.55;
       if (s.includes('max dmg'))                                 atkBonus += num;
       if (s.includes('all skills'))                              atkBonus += num * 2;
-      if (s.includes('deadly strike'))                           atkBonus += Math.round(num * 0.2);
-      if (s.includes('resist'))                                  defBonus += Math.round(num * 0.15);
+      if (s.includes('deadly strike'))                           atkBonus += Math.round(num * 0.11);
+      if (s.includes('resist'))                                  defBonus += Math.round(num * 0.0825);
       if (s.includes('to str') || s.includes('to strength'))    { atkBonus += Math.round(num * 0.2); defBonus += Math.round(num * 0.1); }
       const dmgM = prop.match(/Dmg:\s*(\d+)-(\d+)/i);
       if (dmgM) atkBonus += Math.round((+dmgM[1] + +dmgM[2]) / 2 * 0.3);
