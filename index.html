@@ -344,7 +344,7 @@
   <div class="loot-col">
     <button class="mob-panel-close" onclick="closeMobPanels()" title="Close"><i class="ti ti-x"></i></button>
     <div id="lootPanel" style="display:none" class="panel">
-      <div class="mob-fight-handle"></div>
+      <div class="mob-fight-handle" id="lootDragHandle"></div>
       <div class="panel-title"><i class="ti ti-sword"></i> Monster loot</div>
       <div id="loot-slot-1" class="loot-slot"><div class="loot-empty">Defeat a monster to claim loot</div></div>
       <div id="loot-slot-2" class="loot-slot"><div class="loot-empty" style="opacity:0.4"></div></div>
@@ -429,17 +429,54 @@ function closeMobPanels() {
 }
 function closeMobLoot() {
   var lp = document.getElementById('lootPanel');
-  if (lp && lp.classList.contains('mob-modal')) {
-    lp.style.animation = 'mob-fight-down 0.3s ease forwards';
-    document.getElementById('mobFightBackdrop').classList.remove('active');
-    setTimeout(function() {
-      lp.style.animation = '';
-      lp.classList.remove('mob-modal');
-      lp.style.display = 'none';
-      document.querySelector('.loot-col').appendChild(lp);
-    }, 300);
-  }
+  if (!lp || !lp.classList.contains('mob-modal')) return;
+  lp.style.transition = 'transform 0.3s ease';
+  lp.style.transform = 'translateY(100%)';
+  document.getElementById('mobFightBackdrop').classList.remove('active');
+  setTimeout(function() {
+    lp.style.transition = '';
+    lp.style.transform = '';
+    lp.classList.remove('mob-modal');
+    lp.style.display = 'none';
+    document.querySelector('.loot-col').appendChild(lp);
+  }, 300);
 }
+
+// Swipe-to-dismiss on loot panel handle
+(function() {
+  var startY = 0, dragging = false;
+  document.addEventListener('touchstart', function(e) {
+    var handle = document.getElementById('lootDragHandle');
+    if (!handle) return;
+    var lp = document.getElementById('lootPanel');
+    if (!lp || !lp.classList.contains('mob-modal')) return;
+    if (e.target === handle || handle.contains(e.target)) {
+      startY = e.touches[0].clientY;
+      dragging = true;
+    }
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e) {
+    if (!dragging) return;
+    var lp = document.getElementById('lootPanel');
+    if (!lp) return;
+    var dy = e.touches[0].clientY - startY;
+    if (dy > 0) lp.style.transform = 'translateY(' + dy + 'px)';
+  }, { passive: true });
+  document.addEventListener('touchend', function(e) {
+    if (!dragging) return;
+    dragging = false;
+    var lp = document.getElementById('lootPanel');
+    if (!lp) return;
+    var dy = e.changedTouches[0].clientY - startY;
+    if (dy > 80) {
+      closeMobLoot();
+    } else {
+      lp.style.transition = 'transform 0.2s ease';
+      lp.style.transform = '';
+      setTimeout(function() { lp.style.transition = ''; }, 200);
+    }
+  }, { passive: true });
+})();
 </script>
 
 

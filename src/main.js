@@ -406,9 +406,13 @@ function renderLootSlot(slotEl, item, idx) {
   if (!item) { slotEl.innerHTML = '<div class="loot-empty">No drop</div>'; return; }
   const rc        = item.rc || RC.Normal;
   const canEquip  = item.slot && ['helmet','amulet','chest','gloves','boots','charm'].includes(item.slot);
-  const equipLabel = 'Equip';
   const already   = window._claimedLoot && window._claimedLoot[idx];
   const locked    = !!window._fightActive;
+  let lockMsg = null;
+  if (item.slot === 'charm' && item.charmSize === 'large') {
+    const { rank } = getHunterRank(save.playerXP);
+    if (rank.lvl < 10) lockMsg = 'Reach Lvl 10';
+  }
   const spriteUrl = getSpriteUrl(item.name, item.slot);
   slotEl.style.borderColor = rc.color + '70';
   slotEl.style.boxShadow   = `0 0 8px ${rc.color}30`;
@@ -426,7 +430,9 @@ function renderLootSlot(slotEl, item, idx) {
     ${canEquip
       ? (locked
           ? `<button class="loot-equip-btn" disabled style="opacity:0.35;cursor:not-allowed" title="Defeat the monster first"><i class="ti ti-lock" style="font-size:10px"></i></button>`
-          : `<button class="loot-equip-btn${already?' claimed':''}" onclick="equipFromLoot(${idx})" ${already?'disabled':''}>${already?'<i class="ti ti-check"></i> Equipped':equipLabel}</button>`
+          : lockMsg
+            ? `<div style="font-size:9px;color:var(--text-secondary);text-align:center;margin-top:3px"><i class="ti ti-lock" style="font-size:9px"></i> ${lockMsg}</div>`
+            : `<button class="loot-equip-btn${already?' claimed':''}" onclick="equipFromLoot(${idx})" ${already?'disabled':''}>${already?'<i class="ti ti-check"></i> Equipped':'Equip'}</button>`
         )
       : '<div style="font-size:9px;color:var(--text-tertiary);margin-top:3px;text-align:center">Cannot equip</div>'
     }`;
