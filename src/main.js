@@ -404,6 +404,17 @@ function resetLootPanel(score) {
 
 function renderLootSlot(slotEl, item, idx) {
   if (!item) { slotEl.innerHTML = '<div class="loot-empty">No drop</div>'; return; }
+  if (item._goldDrop) {
+    slotEl.style.borderColor = '#c8a227aa';
+    slotEl.style.boxShadow   = '0 0 8px #c8a22730';
+    slotEl.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:36px">
+        <i class="ti ti-coins" style="font-size:22px;color:#c8a227"></i>
+      </div>
+      <div style="font-size:9px;color:#c8a227;text-align:center;margin-top:3px;font-weight:600">+${item.goldAmt} Gold</div>
+      <div style="font-size:8px;color:var(--text-tertiary);text-align:center">Already equipped</div>`;
+    return;
+  }
   const rc        = item.rc || RC.Normal;
   const canEquip  = item.slot && ['helmet','amulet','chest','gloves','boots','charm'].includes(item.slot);
   const already   = window._claimedLoot && window._claimedLoot[idx];

@@ -317,12 +317,15 @@ async function summonMonster() {
     const slot4 = parsed.score >= 40;
     let _d1, _d2, _d3, _d4;
     if (!already) {
-      _d1 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+      const { rank: dropRank } = getHunterRank(save.playerXP);
+      const dropLvl = dropRank.lvl;
+      _d1 = dropToGoldIfDuplicate(generateDrop(parsed.score, metaTokens, parsed.siteTitle), parsed.score, dropLvl);
       _d2 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
-      if (_d1 && _d2 && _d1.slot === _d2.slot && _d1.name === _d2.name)
+      if (_d2 && !_d2._goldDrop && _d1 && !_d1._goldDrop && _d1.slot === _d2.slot && _d1.name === _d2.name)
         _d2 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
-      if (slot3) _d3 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
-      if (slot4) _d4 = generateDrop(parsed.score, metaTokens, parsed.siteTitle);
+      _d2 = dropToGoldIfDuplicate(_d2, parsed.score, dropLvl);
+      if (slot3) _d3 = dropToGoldIfDuplicate(generateDrop(parsed.score, metaTokens, parsed.siteTitle), parsed.score, dropLvl);
+      if (slot4) _d4 = dropToGoldIfDuplicate(generateDrop(parsed.score, metaTokens, parsed.siteTitle), parsed.score, dropLvl);
     }
     window._pendingDrops = already ? [null,null,null,null] : [_d1, _d2, _d3||null, _d4||null];
     window._claimedLoot  = {};

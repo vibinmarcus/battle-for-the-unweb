@@ -70,6 +70,34 @@ function guessSlot(type) {
   return null;
 }
 
+function _itemsIdentical(a, b) {
+  if (!a || !b) return false;
+  if (a.slot !== b.slot || a.name !== b.name) return false;
+  const ap = (a.props || []).slice().sort();
+  const bp = (b.props || []).slice().sort();
+  return ap.length === bp.length && ap.every((v, i) => v === bp[i]);
+}
+
+function _equippedInSlot(slot, charmSize) {
+  if (!save || !save.equipped) return null;
+  if (slot === 'charm') {
+    const idx = charmSize === 'large' ? 1 : 0;
+    return (save.equipped.charms || [])[idx] || null;
+  }
+  return save.equipped[slot] || null;
+}
+
+const DUPE_GOLD_MULT = { Normal: 1, Magic: 2, Rare: 2, Set: 2.5, Unique: 4, Charm: 3 };
+
+function dropToGoldIfDuplicate(item, score, lvl) {
+  if (!item || !item.slot) return item;
+  const equipped = _equippedInSlot(item.slot, item.charmSize);
+  if (!_itemsIdentical(item, equipped)) return item;
+  const mult = DUPE_GOLD_MULT[item.quality] || 1;
+  const goldAmt = Math.round(rollBaseGold(score, lvl) * mult);
+  return { _goldDrop: true, goldAmt, quality: item.quality, name: item.name, slot: null, rc: RC.Normal };
+}
+
 function generateDrop(score, metaTokens, siteTitle) {
   const tidx  = Math.min(Math.floor(score/10), 9);
   const grade = tidx < 3 ? 'normal' : tidx < 7 ? 'exceptional' : 'elite';

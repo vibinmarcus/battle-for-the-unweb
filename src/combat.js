@@ -54,7 +54,7 @@ function calcGoldBonuses() {
 
 function rollBaseGold(score, lvl) {
   // 4 tiers: T1 lvl 1-19, T2 lvl 20-29, T3 lvl 30-39, T4 lvl 40+
-  const ranges = [[1, 30], [10, 80], [30, 150], [80, 300]];
+  const ranges = [[1, 30], [10, 40], [30, 75], [80, 150]];
   const t = lvl < 20 ? 0 : lvl < 30 ? 1 : lvl < 40 ? 2 : 3;
   const [mn, mx] = ranges[t];
   const base = mn + Math.floor(Math.random() * (mx - mn + 1));
@@ -216,6 +216,15 @@ function endFight(won) {
     }
     const xpMsg = `+${awarded} XP${already ? ' (repeat)' : ''}${linkBonus ? ' · +15% linked domain bonus!' : ''}`;
     logCombat(xpMsg);
+    // Credit gold from duplicate-item conversions
+    if (!already && window._pendingDrops) {
+      let dupeGold = 0;
+      window._pendingDrops.forEach(d => { if (d && d._goldDrop) dupeGold += d.goldAmt; });
+      if (dupeGold > 0) {
+        save.gold = (save.gold || 0) + dupeGold;
+        logCombat(`${dupeGold} gold from duplicate item${dupeGold > 1 ? 's' : ''} (already equipped).`, 'gold-drop');
+      }
+    }
     // ─────────────────────────────────────────────────────────
     writeSave();
     renderGold();
