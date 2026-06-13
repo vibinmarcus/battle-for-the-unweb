@@ -543,7 +543,7 @@ function renderStarterSuggestions() {
   const { rank } = getHunterRank(save.playerXP);
   const lvl = rank.lvl;
   const minScore = Math.max(1, lvl * 0.4 - 1);
-  const maxScore = lvl * 0.5 + 24;
+  const maxScore = lvl * 0.5 + 12;
   const pool = STARTER_SITES.filter(s => s.score >= minScore && s.score <= maxScore);
   if (!pool.length) { el.innerHTML = ''; return; }
   const picks = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);

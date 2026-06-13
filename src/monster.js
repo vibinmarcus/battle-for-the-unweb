@@ -271,7 +271,7 @@ async function summonMonster() {
       fetchFavicon(url, html),
       Promise.resolve(cachedParsed || analyzeHtml(html, url)),
     ]);
-    parsed.score = Math.min(parsed.score, 50);
+    parsed.score = Math.min(parsed.score, 100);
 
     // Cache the analysis for future visits (only for unknown sites we actually fetched)
     if (!isKnown && !cachedParsed && html) {
@@ -358,6 +358,21 @@ async function summonMonster() {
 
     hide('postFight');
     document.getElementById('combatLog').innerHTML = '';
+
+    // Danger warning: show if monster tier is 2+ tiers above player rank tier
+    const { rank: pRank } = getHunterRank(save.playerXP);
+    const playerTierIdx  = Math.min(9, Math.floor((pRank.lvl - 1) / 10));
+    const monsterTierIdx = TIERS.findIndex(t => entry.score >= t.min && entry.score <= t.max);
+    const dangerEl = document.getElementById('dangerWarning');
+    if (dangerEl) {
+      if (monsterTierIdx - playerTierIdx >= 2) {
+        dangerEl.style.display = '';
+        dangerEl.innerHTML = `<i class="ti ti-alert-triangle" style="color:#e8a020"></i> This entity is far beyond your current power — proceed at your own peril.`;
+      } else {
+        dangerEl.style.display = 'none';
+      }
+    }
+
     show('monsterPanel');
     if (window.innerWidth <= 640) {
       var _mp = document.getElementById('monsterPanel');

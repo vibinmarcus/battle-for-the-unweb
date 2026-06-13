@@ -69,12 +69,12 @@ function initFight(entry) {
   const eq    = calcEquipmentBonuses();
 
   const playerMaxHP  = 100 + rank.lvl * 5 + eq.hpBonus;
-  const baseATK      = Math.round(10 + rank.lvl * 2 + cls.atkBonus + (entry.htmlDepth||50) * 0.1 + eq.atkBonus);
+  const baseATK      = Math.round(5 + rank.lvl * 3 + cls.atkBonus + (entry.htmlDepth||50) * 0.1 + eq.atkBonus);
   const playerATK    = Math.round(baseATK * (1 + eq.atkPct / 100));
   const playerDEF    = Math.round((5  + rank.lvl     + cls.defBonus + (entry.cssComplexity||50) * 0.05 + eq.defBonus) * 0.7);
   const monsterMaxHP = Math.round((50 + entry.score * 3) * 0.7);
   const monsterATK   = Math.round((5  + entry.score * 0.8  + (entry.jsWeight||50) * 0.15) * 0.7);
-  const monsterDEF   = Math.round((2  + entry.score * 0.3  + (entry.contentDensity||50) * 0.05) * 0.7);
+  const monsterDEF   = Math.round((2  + entry.score * 0.3  + entry.score * entry.score * 0.005 + (entry.contentDensity||50) * 0.05) * 0.7);
 
   fightState = { entry, tier, cls, playerHP:playerMaxHP, playerMaxHP, playerATK, playerDEF, monsterHP:monsterMaxHP, monsterMaxHP, monsterATK, monsterDEF, round:0, over:false, won:false };
 
@@ -92,7 +92,7 @@ function initFight(entry) {
   logCombat(`The battle begins! ${entry.monsterName} emerges from the Unweb.`);
 
   const eqBonusParts = [];
-  if (eq.atkBonus > 0 || eq.atkPct > 0) eqBonusParts.push(`+${playerATK - Math.round(10 + rank.lvl * 2 + cls.atkBonus + (entry.htmlDepth||50) * 0.1)} ATK from gear`);
+  if (eq.atkBonus > 0 || eq.atkPct > 0) eqBonusParts.push(`+${playerATK - Math.round(5 + rank.lvl * 3 + cls.atkBonus + (entry.htmlDepth||50) * 0.1)} ATK from gear`);
   if (eq.defBonus > 0)                   eqBonusParts.push(`+${eq.defBonus} DEF from gear`);
   if (eq.hpBonus > 0)                    eqBonusParts.push(`+${eq.hpBonus} HP from gear`);
   if (eqBonusParts.length) logCombat(`Equipment: ${eqBonusParts.join(', ')}.`);
