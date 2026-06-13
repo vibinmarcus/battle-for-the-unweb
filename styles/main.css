@@ -541,6 +541,9 @@ button.primary:hover { background: var(--gold-lt); }
   transition: background 0.15s, border-color 0.15s;
 }
 .hbtn:hover { background: var(--bg-tertiary); border-color: var(--gold); }
+.hbtn.primary { background: var(--gold); border-color: var(--gold-lt); }
+.hbtn.primary .hbt { color: #1a1410; }
+.hbtn.primary:hover { background: var(--gold-lt); }
 .hbtn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 .hbt { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
 .hbd { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
