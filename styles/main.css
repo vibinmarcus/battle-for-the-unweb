@@ -203,6 +203,12 @@ button.primary:hover { background: var(--gold-lt); }
   border-radius: var(--radius-lg);
   padding: 10px;
 }
+#lootPanel {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
 .panel-title {
   font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
   color: var(--text-tertiary); text-align: center;
