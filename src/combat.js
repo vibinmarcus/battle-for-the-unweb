@@ -215,6 +215,8 @@ function endFight(won) {
       save.gold = (save.gold || 0) + gold;
       logCombat(`${f.entry.monsterName} dropped ${gold} gold pieces${doubled ? ' (doubled!)' : ''}.`, 'gold-drop');
     }
+    const xpMsg = `+${awarded} XP${already ? ' (repeat)' : ''}${linkBonus ? ' · +15% linked domain bonus!' : ''}`;
+    logCombat(xpMsg);
     // ─────────────────────────────────────────────────────────
     writeSave();
     renderGold();
@@ -224,7 +226,6 @@ function endFight(won) {
     sbWriteLeaderboard(save);
     updateXpBar();
     renderBestiary();
-    setTimeout(() => showToast(`+${awarded} XP${already?' (repeat)':''}${linkBonus ? ' +15% linked domain bonus!' : ''}${!already ? ` · +${gold}g${doubled?' (doubled!)':''}` : ''}${(window._pendingDrops||[]).some(Boolean)?' · loot dropped!':''}`), 300);
     document.getElementById('postFight').style.display = '';
 
     const metrics = [
