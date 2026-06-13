@@ -111,7 +111,7 @@ function goNewAdventure() {
 
 function goLoadAdventure(idx) {
   if (idx !== undefined) activeSlot = idx;
-  if (!hasSave()) return;
+  if (!hasSave(activeSlot)) return;
   save = saves[activeSlot];
   document.getElementById('invPanel').style.display  = '';
   document.getElementById('lootPanel').style.display = '';
