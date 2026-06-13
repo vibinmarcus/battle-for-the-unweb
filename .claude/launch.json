@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "preview",
+      "name": "bftuw",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "3131", "."],
-      "port": 3131
+      "runtimeArgs": ["serve", "-l", "3000", "C:\\Users\\marcu\\OneDrive\\Desktop\\claude\\battle for the unweb"],
+      "port": 3000
     }
   ]
 }

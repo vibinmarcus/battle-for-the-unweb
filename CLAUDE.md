@@ -76,7 +76,7 @@ Scrollbar: 1.5px wide, transparent track, `#3a0a2e` thumb.
 | Ranger  | 9         | 6         | First-strike (free hit at 60% ATK on round 1) |
 | Paladin | 7         | 8         | Regen 2 HP per round |
 
-**Important:** Class specials are listed in descriptions but `doFightRound()` does NOT implement any of them. Combat is flat random-hit with ATK/DEF only.
+**Important:** Class specials are all implemented in `doFightRound()`: Mage 20% crit (1.75×), Ranger first-strike (60% ATK round 1), Paladin regen 2 HP/round, Rogue 25% dodge, Warrior 15% block.
 
 ## Monster system
 
@@ -151,7 +151,7 @@ Shows outcome icon: ⚔️ Defeated (green) / 💀 Lost (crimson) / ⏳ In progr
 
 - Save preview card shows character name, class, rank, XP, defeated count, item count.
 - "Load adventure" button is disabled when no save exists.
-- No "Delete save" button currently — was mentioned in old notes but not present in current code.
+- No "Delete save" button currently — referenced in old notes but not present in UI (per-slot trash icon exists in save cards).
 
 ## Key JS functions
 
@@ -174,18 +174,7 @@ Shows outcome icon: ⚔️ Defeated (green) / 💀 Lost (crimson) / ⏳ In progr
 
 ## What's pending / not yet done
 
-- **Charm stats not applied to combat** — `calcEquipmentBonuses()` iterates `Object.values(save.equipped)` but `charms` is an array `[null,null]`, so charm props are never parsed. Need to flatten charms into the loop.
-- **Charm sprites** — charms display a generic `ti-hexagon` icon. No sprite art exists for them; consider adding charm-specific base64 sprites to `D2_SPRITES` in `loot.js` or using a distinct colored icon per charm type.
-- **Host on a git repository (GitHub recommended)** — see details below.
-
-
-- **Class specials not implemented** — Warrior block, Mage crit, Rogue dodge, Ranger first-strike, Paladin regen are all described in class cards but `doFightRound()` is flat — no special logic exists.
-- **Item stats not applied to combat** — item props like `+ATK` are cosmetic strings only, not parsed into player stats.
-- **Loot slots 3 & 4 always locked** — no mechanic to unlock them (e.g. by rank or monster tier).
-- **Delete save button** — referenced in old notes but not present in current UI.
-- **Gold drops + gambling system** — planned but not started.
-- **Player-to-player item trading** — requires backend, not started.
-- **Drag-and-drop inventory** — not started.
+Nothing currently tracked.
 
 ## Hosting on GitHub
 
