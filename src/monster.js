@@ -367,7 +367,7 @@ async function summonMonster() {
     if (dangerEl) {
       if (monsterTierIdx - playerTierIdx >= 2) {
         dangerEl.style.display = '';
-        dangerEl.innerHTML = `<i class="ti ti-alert-triangle" style="color:#e8a020"></i> This entity is far beyond your current power — proceed at your own peril.`;
+        dangerEl.innerHTML = `<i class="ti ti-alert-triangle"></i> This entity is far beyond your current power — proceed at your own peril. <i class="ti ti-alert-triangle"></i>`;
       } else {
         dangerEl.style.display = 'none';
       }

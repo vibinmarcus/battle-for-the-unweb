@@ -769,6 +769,10 @@ button.primary:hover { background: var(--gold-lt); }
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
 }
+@keyframes danger-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
 @keyframes mob-fight-down {
   from { transform: translateY(0); }
   to   { transform: translateY(100%); }
